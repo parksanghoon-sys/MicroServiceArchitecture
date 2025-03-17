@@ -2,11 +2,7 @@
 
 # 이 스테이지는 VS에서 빠른 모드로 실행할 때 사용됩니다(디버그 구성의 기본값).
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
-USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
 
 # 이 스테이지는 서비스 프로젝트를 빌드하는 데 사용됩니다.
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
@@ -14,8 +10,10 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Basket.Service/Basket.Service.csproj", "Basket.Service/"]
 RUN dotnet restore "./Basket.Service/Basket.Service.csproj"
-COPY . .
-WORKDIR "/src/Basket.Service"
+
+
+COPY ["Basket.Service/", "Basket.Service/"]
+WORKDIR "Basket.Service"
 RUN dotnet build "./Basket.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # 이 스테이지는 최종 스테이지에 복사할 서비스 프로젝트를 게시하는 데 사용됩니다.
