@@ -9,14 +9,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.1" />
+		<PackageReference Include="Scalar.AspNetCore" Version="2.0.36" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="ApiModels\" />
-	  <Folder Include="Infrastructure\" />
-	  <Folder Include="IntegrationEvents\" />
+	  <Folder Include="Infrastructure\EventBus\" />
+	  <Folder Include="Infrastructure\RabbitMq\" />
 	</ItemGroup>
 </Project>
