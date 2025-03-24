@@ -1,6 +1,8 @@
 ﻿using Order.Service.ApiModels;
 using Microsoft.AspNetCore.Mvc;
 using Order.Service.Infrastructure.Data;
+using Order.Service.Infrastructure.EventBus.Abstractions;
+using Order.Service.IntegrationEvents.Events;
 
 namespace Order.Service.Endpoints;
 
@@ -8,7 +10,8 @@ public static class OrderApiEndpoints
 {
     public static void RegisterEndpoints(this IEndpointRouteBuilder routeBuilder)
     {
-        routeBuilder.MapPost("/{customerId}", ([FromServices] IOrderStore orderStore, string customerId, CreateOrderRequest request)=>
+        routeBuilder.MapPost("/{customerId}", ([FromServices] IEventBus eventBus, 
+            [FromServices] IOrderStore orderStore, string customerId, CreateOrderRequest request)=>
         {
             var order = new Models.Order { CustomerId = customerId };
             foreach (var product in request.OrderProducts)
@@ -16,6 +19,8 @@ public static class OrderApiEndpoints
                 order.AddOrderProduct(product.ProductId, product.Quantity);
             }
             orderStore.CreateOreder(order);
+
+            eventBus.PublishAsync(new OrderCreatedEvent(customerId));
 
             return TypedResults.Created($"{order.CustomerId}/{order.OrderId}");
         });

@@ -1,6 +1,7 @@
 
 using Basket.Service.Endpoints;
 using Basket.Service.Infrastructure.Data;
+using Basket.Service.Infrastructure.RabbitMq;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 
@@ -32,6 +33,9 @@ builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IBasketStore, InMemoryBasketStore>();
+
+builder.Services.AddRabbitMqEventBus(builder.Configuration);
+builder.Services.AddHostedService<RabbitMqHostedService>();
 
 var app = builder.Build();
 

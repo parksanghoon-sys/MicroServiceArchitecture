@@ -17,6 +17,5 @@
 
 	<ItemGroup>
 	  <Folder Include="Infrastructure\EventBus\" />
-	  <Folder Include="Infrastructure\RabbitMq\" />
 	</ItemGroup>
 </Project>
