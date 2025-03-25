@@ -2,8 +2,8 @@
 using RabbitMQ.Client;
 using System.Text;
 using System.Text.Json;
-using Basket.Service.IntegrationEvents;
 using Basket.Service.Infrastructure.Data;
+using Basket.Service.IntegrationEvents;
 
 namespace Basket.Service.Infrastructure.RabbitMq;
 

@@ -100,3 +100,7 @@ docker run -it --rm -p 8000:8080 basket.service:v1.0
 RabbitMQ 메시지 브로커를이용해 메시지 전달
 
 docker run -d --hostname rabbitmq-host --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+docker build -t order.service:v1.0 -f Order.Service\Dockerfile .
+
+docker run -it --rm -p 8001:8080 order.service:v1.0

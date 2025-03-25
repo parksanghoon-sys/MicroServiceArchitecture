@@ -21,6 +21,7 @@ public class RabbitMqConnection : IDisposable, IRabbitMqConnection
         var factory = new ConnectionFactory
         {
             HostName = _options.HostName
+            //HostName = "localhost"
         };
 
         _connection = factory.CreateConnection();
