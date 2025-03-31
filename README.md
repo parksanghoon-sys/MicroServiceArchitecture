@@ -72,9 +72,21 @@ hTTP는 여러 프로그램간 느슨하게 통신이 이루어지며 데이터�
 
 * 구독자와 개시자는 서로 완전히 분리될 수있다. 서로 알필요가 없다는 말이다, 게시자는 개시만하면되고 구독자는 데이터를 파싱만 잘하면 된다
 * 비동기 통신 유형이며 메시지는 백그라운드 스레다, 에서 수신된다, 이를 통해 메시지를 보내고 받을 때 오류가 발생해도 복원이 가능하다
-* 
+
+## 게시자 구독 패턴
+
+서비스 별 비동기 메시지 발행을 위해 Pub/Sub 패턴을 사용한다.
+
+### RabbitMQ 
+
+메시지를 발행시 RabbitMq는 큐에 메시지를 생성하고 이벤트를 소비하는 구독자에에 CreatedEvent를 발생 시켜 받을 수 있다.
+
+RabbitMQ 에서 메시징의 핵심은 게시자가 메시지를 대기열로 직접 보내지 않는 것이다, 게시자는 메시지가 대기열로 전달 되었는지 여부조차 알 수 없도록한다, 대신 개시자느 간단한 구성요소인 교환 에만 메시지를 보낸댜, 한쪼 끝에서는 게시자로부터 메시지를 받고, 다른 한편으로는 구독자가 사용할 수 있도록 이러한 메시지를 대기열로 푸시한다.
+
 
 ---
+
+
 
 # 첫번째 프로잭트 구성
 
@@ -90,8 +102,11 @@ REST API 를 준수한 API 를 구축, HTTP 보다 빠른 gRPC , 메시지 또�
 
 docker build -t basket.service:v1.0 -f Basket.Service\Dockerfile .
 
+docker build -t basket.service:v2.0 -f ./Basket.Service/Dockerfile .
+
 docker run -it --rm -p 8000:8080 basket.service:v1.0
 
+docker run -it --rm -p 8000:8080 basket.service:v2.0
 
 ## Order 마이크로 서비스
 

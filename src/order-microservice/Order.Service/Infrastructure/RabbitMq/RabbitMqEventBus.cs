@@ -18,7 +18,7 @@ public class RabbitMqEventBus : IEventBus
     public Task PublishAsync(Event @event)
     {
         using var channel = _rabbitMqConnection.Connection.CreateModel();
-
+        //  메서드를 호출하여 교환의 이름을 제공하고 형식을 로 설정합
         channel.ExchangeDeclare(
             exchange: ExchangeName, 
             type: "fanout",

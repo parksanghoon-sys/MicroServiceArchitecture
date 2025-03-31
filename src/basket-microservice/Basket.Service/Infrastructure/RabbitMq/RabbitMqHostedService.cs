@@ -27,13 +27,15 @@ public class RabbitMqHostedService : IHostedService
 
             var channel = rabbitMQConnection.Connection.CreateModel();
 
+            // 교환이 존재하는지 확인 메시드            
             channel.ExchangeDeclare(
                 exchange: ExchangeName,
                 type: "fanout",
                 durable: false,
                 autoDelete: false,
                 null);
-
+            // 큐에 대한 특정 이벤트 이름을 사용 대신 필드 이름을 사용
+            // Basic 설정
             channel.QueueDeclare(
                 queue: QueueName,
                 durable: false,
