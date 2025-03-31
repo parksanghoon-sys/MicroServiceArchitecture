@@ -9,25 +9,25 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi(options =>
 {
-    //options.AddDocumentTransformer((document, context, cancellationToken) =>
-    //{
-    //    document.Info.Version = "9.9";
-    //    document.Info.Title = "Demo .NET 9 API";
-    //    document.Info.Description = "This API demonstrates OpenAPI customization in a .NET 9 project.";
-    //    document.Info.TermsOfService = new Uri("https://codewithmukesh.com/terms");
-    //    document.Info.Contact = new OpenApiContact
-    //    {
-    //        //Name = "Mukesh Murugan",
-    //        //Email = "mukesh@codewithmukesh.com",
-    //        //Url = new Uri("https://codewithmukesh.com")
-    //    };
-    //    document.Info.License = new OpenApiLicense
-    //    {
-    //        Name = "MIT License",
-    //        Url = new Uri("https://opensource.org/licenses/MIT")
-    //    };
-    //    return Task.CompletedTask;
-    //});
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Info.Version = "9.9";
+        document.Info.Title = "Demo .NET 9 API";
+        document.Info.Description = "This API demonstrates OpenAPI customization in a .NET 9 project.";
+        document.Info.TermsOfService = new Uri("https://codewithmukesh.com/terms");
+        document.Info.Contact = new OpenApiContact
+        {
+            //Name = "Mukesh Murugan",
+            //Email = "mukesh@codewithmukesh.com",
+            //Url = new Uri("https://codewithmukesh.com")
+        };
+        document.Info.License = new OpenApiLicense
+        {
+            Name = "MIT License",
+            Url = new Uri("https://opensource.org/licenses/MIT")
+        };
+        return Task.CompletedTask;
+    });
 });
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
