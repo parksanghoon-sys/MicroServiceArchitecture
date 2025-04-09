@@ -77,7 +77,7 @@ hTTP는 여러 프로그램간 느슨하게 통신이 이루어지며 데이터�
 
 서비스 별 비동기 메시지 발행을 위해 Pub/Sub 패턴을 사용한다.
 
-### RabbitMQ 
+### RabbitMQ
 
 메시지를 발행시 RabbitMq는 큐에 메시지를 생성하고 이벤트를 소비하는 구독자에에 CreatedEvent를 발생 시켜 받을 수 있다.
 
@@ -86,8 +86,6 @@ RabbitMQ 에서 메시징의 핵심은 게시자가 메시지를 대기열로 �
 ![1743435242627](image/README/1743435242627.png)
 
 ---
-
-
 
 # 첫번째 프로잭트 구성
 
@@ -120,3 +118,31 @@ docker run -d --hostname rabbitmq-host --name rabbitmq -p 5672:5672 -p 15672:156
 docker build -t order.service:v1.0 -f Order.Service\Dockerfile .
 
 docker run -it --rm -p 8001:8080 order.service:v1.0
+
+## 공유 라이브러리 만들기
+
+```
+mkdir shared-libs && cd shared-libs
+dotnet new classlib -n ECommerce.Shared
+```
+
+```
+dotnet add package RabbitMQ.Client -v 6.8.1
+dotnet add package Microsoft.Extensions.Configuration.Abstractions -v 9.0.0
+dotnet add package Microsoft.Extensions.Configuration.Binder -v 9.0.0
+dotnet add package Microsoft.Extensions.DependencyInjection.Abstractions -v 9.0.0
+```
+
+공유 라이브러리르 별도의 솔루션에 있을 시 마이크로서비스와 독립적으로 버전을 지정이 가능하며, 이는 모든 소비자를 중단하지 않고 마이크로 서비스의 하위 집합에  새로운 기능을 도입이 가능하다.
+
+마이크로 서비스에 서 사용하기 위해 이러한 공유 라이브러리를 배포하는 방법은 패키지를 개시하기 위한 것이 아니라 Nuget을 통해 배포된다.
+
+시작하려면 공유 NuGet 패키지를 구성하기 위한 새 폴더가 필요하므로 챕터 폴더의 루트에 , 및 폴더와 함께 폴더를 만들어 보겠습니다
+
+프로젝트의 Pack 을 해서 nupkg를 만든다
+
+그후 지정한 폴더에 nupckg를 만든다 아래 예시
+
+```
+dotnet nuget push .\ECommerce.Shared.1.0.0.nupkg -s \\shpark_Nas\Hoon\01.Study\05.WebProjects\01.MicroServiceArchitecture\src\local-nuget-packages
+```
