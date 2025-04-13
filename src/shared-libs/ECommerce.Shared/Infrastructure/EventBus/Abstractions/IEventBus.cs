@@ -1,6 +1,6 @@
 ﻿namespace ECommerce.Shared.Infrastructure.EventBus.Abstractions;
 
-interface IEventBus
+public interface IEventBus
 {
     Task PublishAsync(Event @event);
 }
