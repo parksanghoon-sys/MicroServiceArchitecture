@@ -8,18 +8,19 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["Basket.Service/Basket.Service.csproj", "Basket.Service/"]
-RUN dotnet restore "./Basket.Service/Basket.Service.csproj"
+COPY ["basket-microservice/Basket.Service/Basket.Service.csproj", "Basket.Service/"]
+COPY ["local-nuget-packages/", "/local-nuget-packages/"]
+COPY ["basket-microservice/nuget.config", "./"]
+RUN dotnet restore "Basket.Service/Basket.Service.csproj"
 
 
-COPY ["Basket.Service/", "Basket.Service/"]
+COPY ["basket-microservice/Basket.Service/", "Basket.Service/"]
 WORKDIR "Basket.Service"
-RUN dotnet build "./Basket.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "Basket.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # 이 스테이지는 최종 스테이지에 복사할 서비스 프로젝트를 게시하는 데 사용됩니다.
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Basket.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+FROM build as publish
+RUN dotnet publish "Basket.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish
 
 # 이 스테이지는 프로덕션에서 사용되거나 VS에서 일반 모드로 실행할 때 사용됩니다(디버그 구성을 사용하지 않는 경우 기본값).
 FROM base AS final

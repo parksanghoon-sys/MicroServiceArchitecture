@@ -1,7 +1,7 @@
 
 using Basket.Service.Endpoints;
 using Basket.Service.Infrastructure.Data;
-using Basket.Service.Infrastructure.RabbitMq;
+using ECommerce.Shared.Infrastructure.RabbitMq;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 
