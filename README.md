@@ -147,4 +147,17 @@ dotnet add package Microsoft.Extensions.DependencyInjection.Abstractions -v 9.0.
 dotnet nuget push .\ECommerce.Shared.1.0.0.nupkg -s \\shpark_Nas\Hoon\01.Study\05.WebProjects\01.MicroServiceArchitecture\src\local-nuget-packages
 ```
 
+```
+docker build -t order.service:v2.0 -f order-microservice\Order.Service\Dockerfile .
+docker build -t basket.service:v3.0 -f basket-microservice\Basket.Service\Dockerfile .
+
+docker run -d --hostname rabbitmq-host --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management
+
+```
+
 공유 라이브러리 버젼 관리 .csprog 파일의 **<**VersionPrefix>1.1.0</VersionPrefix**>** 를 이용해 버젼을 관리해 누겟을 관리할 수있다. 그뒤 pack 을 진행 후 다시 donet nuget 을 이용하면 된다.
+
+```
+docker run -it --rm -p 8001:8080 -e RabbitMq__HostName=host.docker.internal order.service:v2.0
+docker run -it --rm -p 8000:8080 -e RabbitMq__HostName=host.docker.internal basket.service:v3.0
+```
