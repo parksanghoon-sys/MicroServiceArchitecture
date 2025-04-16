@@ -146,3 +146,5 @@ dotnet add package Microsoft.Extensions.DependencyInjection.Abstractions -v 9.0.
 ```
 dotnet nuget push .\ECommerce.Shared.1.0.0.nupkg -s \\shpark_Nas\Hoon\01.Study\05.WebProjects\01.MicroServiceArchitecture\src\local-nuget-packages
 ```
+
+공유 라이브러리 버젼 관리 .csprog 파일의 **<**VersionPrefix>1.1.0</VersionPrefix**>** 를 이용해 버젼을 관리해 누겟을 관리할 수있다. 그뒤 pack 을 진행 후 다시 donet nuget 을 이용하면 된다.

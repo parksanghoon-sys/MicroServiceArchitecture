@@ -1,8 +1,9 @@
 using ECommerce.Shared.Infrastructure.RabbitMq;
 using Microsoft.OpenApi.Models;
+using Order.Service.ApiModels;
 using Order.Service.Endpoints;
 using Order.Service.Infrastructure.Data;
-
+using Order.Service.IntegrationEvents;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,11 +33,10 @@ builder.Services.AddScoped<IOrderStore,InMemoryOrderStore>();
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddRabbitMqEventBus(builder.Configuration).AddRabbitMqEventPublisher();
-
+builder.Services.AddRabbitMqEventBus(builder.Configuration)
+    .AddRabbitMqEventPublisher();    
 
 var app = builder.Build();
-
 
 app.RegisterEndpoints();
 app.MapOpenApi();
