@@ -6,8 +6,9 @@ namespace Product.Service.Infrastructure.Data.EntityFramework
     {
         public static void AddSqlServerDatastore(this IServiceCollection service, IConfigurationManager configuration)
         {
+            var dbConnectionString = configuration.GetConnectionString("Default");
             service.AddDbContext<ProductContext>(option =>
-                option.UseSqlServer(configuration.GetConnectionString("Default")));
+                option.UseNpgsql(dbConnectionString));
 
             service.AddScoped<IProductStore, ProductContext>();
         }

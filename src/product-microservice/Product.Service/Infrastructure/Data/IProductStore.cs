@@ -5,5 +5,7 @@
         Task<Models.Product?> GetById(int id);
         Task CreateProduct(Models.Product product);
         Task UpdateProduct(Models.Product product);
+
+        Task<List<Models.ProductType>> GatProducTypeAll();
     }
 }

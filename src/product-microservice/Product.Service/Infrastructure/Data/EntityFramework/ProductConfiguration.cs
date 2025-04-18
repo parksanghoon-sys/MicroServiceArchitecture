@@ -7,7 +7,7 @@ internal class ProductConfiguration : IEntityTypeConfiguration<Models.Product>
 {
     public void Configure(EntityTypeBuilder<Models.Product> builder)
     {
-        builder.HasKey(x => x.Id);
+        builder.HasKey(p => p.Id);
 
         builder.Property(p => p.Name)
             .IsRequired()

@@ -8,8 +8,18 @@ namespace Product.Service.Endpoints
 {
     public static class ProductApiEndpoints
     {
-        public static void RegisterEndPoint(this IEndpointRouteBuilder routeBuilder)
+        public static void RegisterEndpoints(this IEndpointRouteBuilder routeBuilder)
         {
+            routeBuilder.MapGet("/productTypes", async Task<IResult> ([FromServices] IProductStore productStore)
+    =>
+            {
+                var producttypes = await productStore.GatProducTypeAll();
+
+                return producttypes is null
+                        ? TypedResults.NotFound("Product not found")
+                        : TypedResults.Ok(new GetProductTypesResponse(producttypes));
+            });
+
             routeBuilder.MapGet("/{productId}", async Task<IResult> ([FromServices]IProductStore productStore, int productId) 
                 =>
             {
@@ -61,6 +71,5 @@ namespace Product.Service.Endpoints
                 return TypedResults.NoContent();
             });
         }
-    }
-    }
+    }    
 }
