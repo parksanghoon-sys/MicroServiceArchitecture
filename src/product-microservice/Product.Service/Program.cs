@@ -31,7 +31,7 @@ builder.Services.AddOpenApi(options =>
 builder.Services.AddSqlServerDatastore(builder.Configuration);
 
 builder.Services.AddRabbitMqEventBus(builder.Configuration)
-    .AddRabbitMqEventPublisher();
+                .AddRabbitMqEventPublisher();
 
 
 var app = builder.Build();

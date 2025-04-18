@@ -17,12 +17,12 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-
-  sql:
-    container_name: sql  
-    image: mcr.microsoft.com/mssql/server:2022-latest
+  
+  postgresql:
+    container_name: postgresql
+    image: postgres:latest
     ports:
-      - "1433:1433"
+      - "25432:5432"
     environment:
-      - "ACCEPT_EULA=Y"
-      - "MSSQL_SA_PASSWORD=micR0S3rvice$"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=parktest1#"

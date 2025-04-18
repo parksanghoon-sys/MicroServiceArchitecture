@@ -198,8 +198,6 @@ RabbitMQ와 마찬가지로 Docekr Container 에서 SQL Server 등 RDB를 실행
 
 Dcker Compose는 다중 컨테이너 애플리케이션을 정의하고 실행하는 Docker 도구이다, Docker Compose를 사용하면 단일 명령으로 모든 서비스를 실행할 수 있다. 이전과 같이 Dockerfile과 이미지를 정의하지만 이제 포트 매핑, 환경 변수 또는 기타 구성과 함께 필요한 모든 서비스를 정의하는 YAML 구성 파일을 한다.
 
-
-
 ```
 services:
   sql:
@@ -212,3 +210,13 @@ services:
       - "MSSQL_SA_PASSWORD=micR0S3rvice$"
 
 ```
+DB Migragtion
+
+```
+dotnet add package Microsoft.EntityFrameworkCore.Design
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+dotnet tool install dotnet-ef --global -–version 9.0.0
+dotnet add package Microsoft.EntityFrameworkCore.Design -v 9.0.0
+dotnet ef migrations add Initial -o Infrastructure\Data\EntityFramework\Migrations
+dotnet ef migrations add Initial -o Infrastructure\Data\EntityFramework\Migrations -p YourDbProjectPath -s YourStartupProjectPath
+``
