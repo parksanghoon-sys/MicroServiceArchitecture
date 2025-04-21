@@ -38,7 +38,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddScoped<IBasketStore, InMemoryBasketStore>();
 
 builder.Services.AddRabbitMqEventBus(builder.Configuration)
-                .AddRabbitMqSubscriberService(builder.Configuration)
+                .AddRabbitMqSubscriberService(builder.Configuration)                
                 .AddEventHandler<OrderCreatedEvent, OrderCreatedEventHandler>();
 
 builder.Services.AddHostedService<RabbitMqHostedService>();

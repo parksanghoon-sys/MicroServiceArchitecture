@@ -20,7 +20,7 @@ public class RabbitMqConnection : IDisposable, IRabbitMqConnection
     {
         var factory = new ConnectionFactory
         {
-            HostName = _options.HostName
+            HostName = _options.HostName            
         };
 
         _connection = factory.CreateConnection();

@@ -10,10 +10,10 @@ RUN dotnet restore "Product.Service/Product.Service.csproj"
 
 COPY ["product-microservice/Product.Service/", "Product.Service/"]
 WORKDIR "Product.Service"
-RUN dotnet build "Product.Service.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "Product.Service.csproj" -c Release -o /app/build
 
 FROM build as publish
-RUN dotnet publish "Product.Service.csproj" -c $BUILD_CONFIGURATION -o /app/publish
+RUN dotnet publish "Product.Service.csproj" -c Release -o /app/publish
 
 FROM base as final
 WORKDIR /app

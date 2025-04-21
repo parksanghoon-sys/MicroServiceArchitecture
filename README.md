@@ -123,11 +123,13 @@ docker run -it --rm -p 8001:8080 order.service:v1.0
 ## 공유 라이브러리 만들기
 
 ```
+
 mkdir shared-libs && cd shared-libs
 dotnet new classlib -n ECommerce.Shared
 ```
 
 ```
+
 dotnet add package RabbitMQ.Client -v 6.8.1
 dotnet add package Microsoft.Extensions.Configuration.Abstractions -v 9.0.0
 dotnet add package Microsoft.Extensions.Configuration.Binder -v 9.0.0
@@ -145,7 +147,7 @@ dotnet add package Microsoft.Extensions.DependencyInjection.Abstractions -v 9.0.
 그후 지정한 폴더에 nupckg를 만든다 아래 예시
 
 ```
-dotnet nuget push .\ECommerce.Shared.1.0.0.nupkg -s \\shpark_Nas\Hoon\01.Study\05.WebProjects\01.MicroServiceArchitecture\src\local-nuget-packages
+dotnet nuget push .\ECommerce.Shared.1.0.1.nupkg -s \\shpark_Nas\Hoon\01.Study\05.WebProjects\01.MicroServiceArchitecture\src\local-nuget-packages
 ```
 
 ```
@@ -159,8 +161,8 @@ docker run -d --hostname rabbitmq-host --name rabbitmq -p 5672:5672 -p 15672:156
 공유 라이브러리 버젼 관리 .csprog 파일의 **<**VersionPrefix>1.1.0</VersionPrefix**>** 를 이용해 버젼을 관리해 누겟을 관리할 수있다. 그뒤 pack 을 진행 후 다시 donet nuget 을 이용하면 된다.
 
 ```
-docker run -it --rm -p 8001:8080 -e RabbitMq__HostName=host.docker.internal order.service:v2.0
-docker run -it --rm -p 8000:8080 -e RabbitMq__HostName=host.docker.internal basket.service:v3.0
+docker run -d --rm -p 8001:8080 -e RabbitMq__HostName=host.docker.internal order.service:v2.0
+docker run -d --rm -p 8000:8080 -e RabbitMq__HostName=host.docker.internal basket.service:v3.0
 ```
 
 ## 데이터 공유
@@ -220,3 +222,5 @@ dotnet add package Microsoft.EntityFrameworkCore.Design -v 9.0.0
 dotnet ef migrations add Initial -o Infrastructure\Data\EntityFramework\Migrations
 dotnet ef migrations add Initial -o Infrastructure\Data\EntityFramework\Migrations -p YourDbProjectPath -s YourStartupProjectPath
 ``
+
+docker build -t product.service:v1.0 -f .\product-microservice\Product.Service\Dockerfile .
