@@ -22,7 +22,7 @@ services:
   #     - app-network
   product:
     depends_on:
-        # - postgresql
+        #- postgresql
         - rabbitmq
     container_name: product  
     build: 
@@ -31,13 +31,13 @@ services:
     ports:
         - "8002:8080"
     environment:
-        - "ASPNETCORE_ENVIRONMENT=Development"
-        - "RabbitMq__HostName=host.docker.internal"
-        - "ConnectionStrings__Default=Server=shpark94.synology.me;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;"
+        - ASPNETCORE_ENVIRONMENT=Development
+        - RabbitMq__HostName=host.docker.internal
+        - ConnectionStrings__Default=Server=shpark94.synology.me;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
         # - "RabbitMq__UserName=guest"
         # - "RabbitMq__Password=guest"
-    networks:
-      - app-network
-networks:
-  app-network:
-    driver: bridge
+#     networks:
+#       - app-network
+# networks:
+#   app-network:
+#     driver: bridge

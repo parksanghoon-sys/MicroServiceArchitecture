@@ -39,7 +39,8 @@ builder.Services.AddScoped<IBasketStore, InMemoryBasketStore>();
 
 builder.Services.AddRabbitMqEventBus(builder.Configuration)
                 .AddRabbitMqSubscriberService(builder.Configuration)                
-                .AddEventHandler<OrderCreatedEvent, OrderCreatedEventHandler>();
+                .AddEventHandler<OrderCreatedEvent, OrderCreatedEventHandler>()
+                .AddEventHandler<ProductPriceUpdatedEvent, ProductPriceUpdatedEventHandler>();
 
 builder.Services.AddHostedService<RabbitMqHostedService>();
 

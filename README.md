@@ -212,6 +212,7 @@ services:
       - "MSSQL_SA_PASSWORD=micR0S3rvice$"
 
 ```
+
 DB Migragtion
 
 ```
@@ -221,6 +222,11 @@ dotnet tool install dotnet-ef --global -–version 9.0.0
 dotnet add package Microsoft.EntityFrameworkCore.Design -v 9.0.0
 dotnet ef migrations add Initial -o Infrastructure\Data\EntityFramework\Migrations
 dotnet ef migrations add Initial -o Infrastructure\Data\EntityFramework\Migrations -p YourDbProjectPath -s YourStartupProjectPath
-``
+
+```
 
 docker build -t product.service:v1.0 -f .\product-microservice\Product.Service\Dockerfile .
+
+## Basket Micro Service 기능 확장
+
+제품의 가격을 저장할 곳이 필요하며 캐시는 Basket 서비스를 위해 사용된다. 
