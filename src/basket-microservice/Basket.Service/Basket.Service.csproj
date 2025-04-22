@@ -16,6 +16,7 @@
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
 		<PackageReference Include="Scalar.AspNetCore" Version="2.0.36" />
 		<PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+		<InternalsVisibleTo Include="Basket.Tests" />
 	</ItemGroup>
 
 </Project>
