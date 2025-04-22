@@ -160,14 +160,12 @@ docker run -d --hostname rabbitmq-host --name rabbitmq -p 5672:5672 -p 15672:156
 
 공유 라이브러리 버젼 관리 .csprog 파일의 **<**VersionPrefix>1.1.0</VersionPrefix**>** 를 이용해 버젼을 관리해 누겟을 관리할 수있다. 그뒤 pack 을 진행 후 다시 donet nuget 을 이용하면 된다.
 
-```
 docker run -d --rm -p 8001:8080 -e RabbitMq__HostName=host.docker.internal order.service:v2.0
 docker run -d --rm -p 8000:8080 -e RabbitMq__HostName=host.docker.internal basket.service:v3.0
-```
 
 ## 데이터 공유
 
-*모놀리식에서는 저장소를 포함한 모든 데이터가 모든 코드에서 효과적으로 공유가 된다.* 
+*모놀리식에서는 저장소를 포함한 모든 데이터가 모든 코드에서 효과적으로 공유가 된다.*
 
 일반적으로 이는 전체 코드베이스에서 동일한 데이터베이스 기술이 사용된다는 것을 의미합니다. 이것은 괜찮을 수 있지만 비정형 JSON은 NoSQL 데이터베이스에 저장되는 반면 관계형 데이터는 SQL 데이터베이스에 가장 효과적으로 저장되는 것과 같이 특정 유형의 데이터는 다른 데이터베이스에 저장하는 것이 더 적합합니다.
 
@@ -192,7 +190,7 @@ docker run -d --rm -p 8000:8080 -e RabbitMq__HostName=host.docker.internal baske
 
 ### Docker Compose 이용하기
 
-RabbitMQ와 마찬가지로 Docekr Container 에서 SQL Server 등 RDB를 실행하도록 선태 할 수있다. 이를 통해 SQL 엔진을 설치할 필요 없으며 개발환경을 깨끗하게 유지할 수 있다. 더욱이 우리는 현재 Docker에서 다양한 서비스를 실행하는 단계에 있으며, 모든 명령과 포트매핑을 관리하는 것이 지저분해진다, 
+RabbitMQ와 마찬가지로 Docekr Container 에서 SQL Server 등 RDB를 실행하도록 선태 할 수있다. 이를 통해 SQL 엔진을 설치할 필요 없으며 개발환경을 깨끗하게 유지할 수 있다. 더욱이 우리는 현재 Docker에서 다양한 서비스를 실행하는 단계에 있으며, 모든 명령과 포트매핑을 관리하는 것이 지저분해진다,
 
 다행히도 Docker Compose의 형태로 해결을 할 수 있다.
 
@@ -229,4 +227,24 @@ docker build -t product.service:v1.0 -f .\product-microservice\Product.Service\D
 
 ## Basket Micro Service 기능 확장
 
-제품의 가격을 저장할 곳이 필요하며 캐시는 Basket 서비스를 위해 사용된다. 
+제품의 가격을 저장할 곳이 필요하며 캐시는 Basket 서비스를 위해 사용된다.
+
+docker compose 에 Redis 항목  및 Basket 서비스 추가
+
+```
+redis:
+  container_name: redis
+  image: redis:6.2-alpine
+  ports:
+    - "6379:6379"
+basket:
+  container_name: basket
+  build:
+    context: .
+    dockerfile: ./basket-microservice/Basket.Service/Dockerfile
+  ports:
+    - "8000:8080"
+  environment:
+    - "RabbitMq__HostName=host.docker.internal"
+    - "Redis__Configuration=host.docker.internal:6379"
+```

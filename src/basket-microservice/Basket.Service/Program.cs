@@ -1,6 +1,7 @@
 
 using Basket.Service.Endpoints;
 using Basket.Service.Infrastructure.Data;
+using Basket.Service.Infrastructure.Data.Redis;
 using Basket.Service.IntegrationEvents;
 using Basket.Service.IntegrationEvents.EventHandlers;
 using ECommerce.Shared.Infrastructure.EventBus;
@@ -33,9 +34,12 @@ builder.Services.AddOpenApi(options =>
     });
 });
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddRedisCache(builder.Configuration);
+
 //builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IBasketStore, InMemoryBasketStore>();
+//builder.Services.AddScoped<IBasketStore, InMemoryBasketStore>();
+builder.Services.AddScoped<IBasketStore, RedisBasketStore>();
 
 builder.Services.AddRabbitMqEventBus(builder.Configuration)
                 .AddRabbitMqSubscriberService(builder.Configuration)                
@@ -43,6 +47,7 @@ builder.Services.AddRabbitMqEventBus(builder.Configuration)
                 .AddEventHandler<ProductPriceUpdatedEvent, ProductPriceUpdatedEventHandler>();
 
 builder.Services.AddHostedService<RabbitMqHostedService>();
+
 
 var app = builder.Build();
 
