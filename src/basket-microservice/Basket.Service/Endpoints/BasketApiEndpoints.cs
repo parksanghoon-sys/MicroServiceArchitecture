@@ -6,67 +6,66 @@ using Microsoft.Extensions.Caching.Distributed;
 
 namespace Basket.Service.Endpoints;
 
-public static class BsketApiEndpoints
+public static class BasketApiEndpoints
 {
     public static void RegisterEndpoints(this IEndpointRouteBuilder routeBuilder)
     {
-        routeBuilder.MapGet("/{customerId}", ([FromServices]IBasketStore basketStore,string customerId)
-            => basketStore.GetBasketByCustomerId(customerId));
+        routeBuilder.MapGet("/{customerId}", GetBasket);
 
-        routeBuilder.MapPost("/{customerId}",
-                            async ([FromServices] IBasketStore basketStore,
-                                    [FromServices] IDistributedCache cache, 
-                                    string customerId, 
-                                    CreateBasketRequest createBasketRequest) =>
-                              {
-                                  var customerBasket = new CustomerBasket { CustomerId = customerId };
+        routeBuilder.MapPost("/{customerId}", CreateBasket);
 
-                                  var cachedProductPrice = decimal.Parse(await cache.GetStringAsync(createBasketRequest.ProductId));
+        routeBuilder.MapPut("/{customerId}", AddBasketProduct);
 
-                                  customerBasket.AddBasketProduct(new BasketProduct(createBasketRequest.ProductId, createBasketRequest.ProductName, cachedProductPrice));
+        routeBuilder.MapDelete("/{customerId}/{productId}", DeleteBasketProduct);
 
-                                  basketStore.CreateCustomerBasket(customerBasket);
+        routeBuilder.MapDelete("/{customerId}", DeleteBasket);
+    }
 
-                                  return TypedResults.Created();
-                              });
+    internal static async Task<CustomerBasket> GetBasket(IBasketStore basketStore, string customerId)
+       => await basketStore.GetBasketByCustomerId(customerId);
 
+    internal static async Task<IResult> CreateBasket(IBasketStore basketStore, IDistributedCache cache, string customerId, CreateBasketRequest createBasketRequest)
+    {
+        var customerBasket = new CustomerBasket { CustomerId = customerId };
 
-        routeBuilder.MapPut("/{customerId}", async
-                            ([FromServices] IBasketStore basketStore,
-                            [FromServices] IDistributedCache cache, 
-                            string customerId, 
-                            AddBasketProductRequest addProductRequest) =>
-       {
-           var customerBasket = await basketStore.GetBasketByCustomerId(customerId);
-           var cachedProductPrice = decimal.Parse(await cache.GetStringAsync(addProductRequest.ProductId));
+        var cachedProductPrice = decimal.Parse(await cache.GetStringAsync(createBasketRequest.ProductId));
 
-           customerBasket.AddBasketProduct(new BasketProduct(addProductRequest.ProductId,
-                                            addProductRequest.ProductName, cachedProductPrice, addProductRequest.Quantity));
+        customerBasket.AddBasketProduct(new BasketProduct(createBasketRequest.ProductId, createBasketRequest.ProductName, cachedProductPrice));
 
-           basketStore.UpdateCustomerBasket(customerBasket);
+        await basketStore.CreateCustomerBasket(customerBasket);
 
-           return TypedResults.NoContent();
-       });
+        return TypedResults.Created();
+    }
 
+    internal static async Task<IResult> AddBasketProduct(IBasketStore basketStore, IDistributedCache cache, string customerId, AddBasketProductRequest addProductRequest)
+    {
+        var customerBasket = await basketStore.GetBasketByCustomerId(customerId);
 
-        routeBuilder.MapDelete("/{customerId}/{productId}", async
-            ([FromServices] IBasketStore basketStore, string customerId, string productId) =>
-            {
-                var customerBasket = await basketStore.GetBasketByCustomerId(customerId);
-                
-                customerBasket.RemoveBasketProduct(productId);
+        var cachedProductPrice = decimal.Parse(await cache.GetStringAsync(addProductRequest.ProductId));
 
-                await basketStore.UpdateCustomerBasket(customerBasket);
+        customerBasket.AddBasketProduct(new BasketProduct(addProductRequest.ProductId,
+            addProductRequest.ProductName, cachedProductPrice, addProductRequest.Quantity));
 
-                return TypedResults.NoContent();
-            });
+        await basketStore.UpdateCustomerBasket(customerBasket);
 
-        routeBuilder.MapDelete("/{customerId}",
-            ([FromServices] IBasketStore basketStore, string customerId) =>
-            {
-                basketStore.DeleteCustomerBasket(customerId);
+        return TypedResults.NoContent();
+    }
 
-                return TypedResults.NoContent();
-            });
+    internal static async Task<IResult> DeleteBasketProduct(IBasketStore basketStore, string customerId, string productId)
+    {
+        var customerBasket = await basketStore.GetBasketByCustomerId(customerId);
+
+        customerBasket.RemoveBasketProduct(productId);
+
+        await basketStore.UpdateCustomerBasket(customerBasket);
+
+        return TypedResults.NoContent();
+    }
+
+    internal static async Task<IResult> DeleteBasket(IBasketStore basketStore, string customerId)
+    {
+        await basketStore.DeleteCustomerBasket(customerId);
+
+        return TypedResults.NoContent();
     }
 }

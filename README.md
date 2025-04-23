@@ -282,3 +282,13 @@ basket:
 예를 들어 전자 상거래 어플에서 제품을 만들고, 고객이 이를 장바구니에 추가하고 주문 마이크로 서비스를 활용 결제를 계속 할 수 있다.
 
 이런 작업을 완료하기 위해 고객 인증이 필요한경우 이는 E2E 테스트에 포함 할 수 있는 또 따른 기능이 된다, 해당 테스트에는 여러 구성 요소가 포함되고 사용자 인터페이스가 포함되는 경우가 많기 떄문에 불안정 할 수 있다. 사용자 인터페이슨ㄴ 소량이라도 정기적으로변경되며, E2E 테스트를 작성하는데 사용되는 소프트웨어는 상호 작용할 수 있는 특정 UI 구성요소에 의존하다, 이 소프트웨어는 애플리케이션과 상호 작용하는 사용자를 효과적으로 모방하지만 프로그래밍 방식으로 수행한다.
+
+### 테스트
+
+* 아래와 같이 단일 메서드만 테스트 시 cli 를 이용해 가능하다.
+
+dotnet test --filter DisplayName=Basket.Tests.CustomerBasketTest.Domain.GivenCustomerBasketWithProduct_WhenCallingAddBasketProductWithExistingProduct_ThenBasketUpdated
+
+* 아래를 프로젝트에 설정한다면 internal 선언 한 클래스를 사용이 가능하다
+
+`<InternalsVisibleTo Include="Basket.Tests" />`
