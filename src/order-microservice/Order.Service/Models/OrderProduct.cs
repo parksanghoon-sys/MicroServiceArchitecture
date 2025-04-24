@@ -7,9 +7,11 @@ namespace Order.Service.Models;
 /// </summary>
 /// <param name="ProductId"></param>
 /// <param name="Quantity"></param>
-internal record OrderProduct(string ProductId, int Quantity)
+internal record OrderProduct
 {
-    public int Quantity { get; private set; } = Quantity;
+    public required string ProductId { get; init; }
+    public required Guid OrderId { get; init; }
+    public int Quantity { get; private set; }
 
     public void AddQuantity(int quantity)
     {

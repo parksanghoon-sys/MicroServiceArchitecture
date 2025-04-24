@@ -1,0 +1,36 @@
+﻿
+using Microsoft.EntityFrameworkCore;
+using Order.Service.Models;
+using System.Data.Common;
+
+namespace Order.Service.Infrastructure.Data.EntityFramework;
+
+internal class OrderContext : DbContext, IOrderStore
+{
+    public OrderContext(DbContextOptions<OrderContext> options)
+        : base(options) 
+    {
+        
+    }
+    public DbSet<Models.Order> Orders { get; set; }
+    public DbSet<OrderProduct> OrderProducts { get; set; }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new OrderConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderProductConfiguration());
+    }
+    public async Task CreateOreder(Models.Order order)
+    {
+        Orders.Add(order);
+
+        await SaveChangesAsync();
+    }
+
+    public async Task<Models.Order?> GetCustomerOrderById(string customerId, string orderId)
+    {
+        return await Orders.
+                        Include(o => o.OrderProducts).
+                        FirstOrDefaultAsync(o => o.CustomerId == customerId && o.OrderId.ToString() == orderId);
+
+    }
+}

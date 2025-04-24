@@ -221,6 +221,7 @@ dotnet add package Microsoft.EntityFrameworkCore.Design -v 9.0.0
 dotnet ef migrations add Initial -o Infrastructure\Data\EntityFramework\Migrations
 dotnet ef migrations add Initial -o Infrastructure\Data\EntityFramework\Migrations -p YourDbProjectPath -s YourStartupProjectPath
 
+dotnet ef database update
 ```
 
 docker build -t product.service:v1.0 -f .\product-microservice\Product.Service\Dockerfile .

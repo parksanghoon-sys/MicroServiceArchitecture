@@ -1,9 +1,7 @@
 using ECommerce.Shared.Infrastructure.RabbitMq;
 using Microsoft.OpenApi.Models;
-using Order.Service.ApiModels;
 using Order.Service.Endpoints;
-using Order.Service.Infrastructure.Data;
-using Order.Service.IntegrationEvents;
+using Order.Service.Infrastructure.Data.EntityFramework;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,7 +27,7 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-builder.Services.AddScoped<IOrderStore,InMemoryOrderStore>();
+builder.Services.AddSqlServerDatastore(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -49,6 +47,13 @@ app.MapScalarApiReference(options =>
     .WithClientButton(true);
 });
 
+if (app.Environment.IsDevelopment())
+{
+    app.MigrateDatabase();
+}
+
 app.UseHttpsRedirection();
 
 app.Run();
+
+public partial class Program;
