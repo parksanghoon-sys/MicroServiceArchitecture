@@ -293,3 +293,61 @@ dotnet test --filter DisplayName=Basket.Tests.CustomerBasketTest.Domain.GivenCus
 * 아래를 프로젝트에 설정한다면 internal 선언 한 클래스를 사용이 가능하다
 
 `<InternalsVisibleTo Include="Basket.Tests" />`
+
+## 서비스 추적 시스템 (Observability)
+
+마이크로 서비스가 프로덕션 환경에서 어떻게 수행되고 있는지 체크하고 추적할 수 있다. 관찰 가능한 구성요소를 원격 분석이라고 하고 자세히 다뤄본다.
+
+### (Trace) 추적
+
+요청의 출처가 어디든 상관 없이 서비스가 요청을 수신할 때 무슨 일이 일어나는지 대략적으로 파악이 가능하게 해준다, 데이터 겁색을 위해 데이터베이스와 통신하거나, 다른 서비스에 HTTP 호출을 할 떄 와 같이 서비스경계를 넘나들며 추적할 수 있다, 추적은 일련의 스팬으로 구성이 되는데, 스팬은 요청 범위 내에서 발생하는 단일 이벤트로, 예를 들면 서비스가 HTTP 요청을 보내거나 메시지 브로커에 이벤트를 개시 할 때마다 발상한다, 스팬은 추적의 구성요소이며 키 - 값형식의 여러정보를 포함한다.
+
+```
+{
+  "name": "HTTP Request Received",
+  "context": {
+    "trace_id": "0x5b2ab5a1d2c8092f8111cf37308d39aa0",
+    "span_id": "0x067581af3cb53c11"
+  },
+  "parent_id": null,
+  "start_time": "2024-06-25T14:31:38.114101Z",
+  "end_time": "2024-06-25T14:31:40.114231Z",
+  "attributes": {
+    "http.route": "/1"
+  }
+"events": [
+    {
+      "name": "Retrieving Product from database",
+      "timestamp": "2024-06-25T14:31:39.123199Z",
+      "attributes": {
+        "event_attributes": 1
+      }
+    }
+  ]
+}
+```
+여기서 핵심 정보로 첫번째는 두개의 자식 속성을 포함하는 Context 속성이다. 추적을 구성하기 위해 범위를 결함하는데 사용되는 고유 식벽자이다, 이 값은 서비스간 전달되므로 요청 컨텍스트 내에서 생성된 모든 범위가 올바르게 연결된다. 'trace_id' 다음으로, 특정 이벤트에 대한 고유 ID를 제공한다, 'parent_id' 필드를 보면 null 임을을 알수 있다, 이는 *루트 스팬* 이라는 요청의 시작을 나타낸다, 여기서 HTTP 호출에 대해 존재할 속성과같이 범위에 컨텍스트를 제공하는 몇가지의 추가 속성이 있다, 'span_id', 'http.rout' 등
+
+### Metrics
+
+추작은 사용자 요청을 분석하는데 유용하지만 서비스의 전반적 성능에 대한 데이터를 수집시에는 용이하지 않다 이떄 Metrics가 작동한다, **메트릭은 일정 시간동안 캡처하고 집계하는 서비스 내의 데이터 포인트를 측정** 한다 이러한 데이터 요소를 사요하여 새로운 기능을 출시 시 서비스 성능이 더 좋거나 나빠지는지 평가를 할 수 있다.
+
+CPU, 메모리 사용량 같은 간단한 성능 메트릭에서 요청/응답 시간  심지지어 얼마나 많은 주문을 받았는지에대한 특정 도메인에 대한 사용자 지정 메트릭까지 다양한 정보를 수집이가능ㅎ다. 
+
+
+### Logging
+
+문제 발생시 로그를 사용하면 발생한 시점의 타임스템프와 함께 몇가지 컨텍스트 정보와 심각도에 따라 문제를 기록 할 수있다. 
+
+### 오픈텔레메트리
+
+OpenTelemetry가 작동합니다. 모든 관찰 가능성 도구 또는 프로그래밍 언어가 데이터를 생성하거나 수집할 때 따라야 하는 API와 규칙을 정의합니다. 원격 분석 데이터 형식의 이름 지정이 표준화되도록 하는 의미 체계 규칙과 이 원격 분석 데이터의 모양을 정의하는 프로토콜(OTLP)을 제공합니다.
+
+### 실제 적용
+
+ECommerce.Shareed 프로젝트에 아래와 같은 누겟 패키지 설치하여 적용
+```
+dotnet add package OpenTelemetry.Extensions.Hosting -v 1.9.0
+dotnet add package OpenTelemetry.Instrumentation.AspNetCore -v 1.9.0
+dotnet add package OpenTelemetry.Exporter.Console -v 1.9.0
+```
