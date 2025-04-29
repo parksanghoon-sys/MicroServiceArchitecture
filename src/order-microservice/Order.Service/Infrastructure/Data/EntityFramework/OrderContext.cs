@@ -1,7 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Order.Service.Models;
-using System.Data.Common;
 
 namespace Order.Service.Infrastructure.Data.EntityFramework;
 

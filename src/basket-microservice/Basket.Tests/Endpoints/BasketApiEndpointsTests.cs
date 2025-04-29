@@ -5,11 +5,7 @@ using Basket.Service.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Caching.Distributed;
 using NSubstitute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Basket.Tests.Endpoints
 {

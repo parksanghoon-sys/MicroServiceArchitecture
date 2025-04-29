@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Product.Service.Models;
+﻿namespace Product.Service.Models;
 
 internal class Product
 {

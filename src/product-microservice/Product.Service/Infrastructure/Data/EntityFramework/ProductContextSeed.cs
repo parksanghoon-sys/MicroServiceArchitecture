@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
 
 namespace Product.Service.Infrastructure.Data.EntityFramework;
 

@@ -1,6 +1,4 @@
-﻿using System.Xml.Serialization;
-
-namespace Order.Service.Models;
+﻿namespace Order.Service.Models;
 
 /// <summary>
 /// 외부 공개하지 않는 Order 제품 모델 클래스

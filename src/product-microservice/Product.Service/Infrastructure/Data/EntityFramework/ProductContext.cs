@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Product.Service.Models;
-using System.Linq;
 
 namespace Product.Service.Infrastructure.Data.EntityFramework;
 

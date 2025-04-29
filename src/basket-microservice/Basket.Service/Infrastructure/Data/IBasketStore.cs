@@ -1,5 +1,4 @@
 ﻿using Basket.Service.Models;
-using Microsoft.AspNetCore.Mvc.DataAnnotations;
 
 namespace Basket.Service.Infrastructure.Data
 {

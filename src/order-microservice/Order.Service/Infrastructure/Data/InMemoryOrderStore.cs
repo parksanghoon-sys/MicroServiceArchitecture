@@ -1,6 +1,4 @@
-﻿using Order.Service.Models;
-
-namespace Order.Service.Infrastructure.Data;
+﻿namespace Order.Service.Infrastructure.Data;
 
 //internal class InMemoryOrderStore : IOrderStore
 //{

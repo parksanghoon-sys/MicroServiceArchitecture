@@ -1,7 +1,6 @@
 using Basket.Service.ApiModels;
 using Basket.Service.Infrastructure.Data;
 using Basket.Service.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace Basket.Service.Endpoints;
