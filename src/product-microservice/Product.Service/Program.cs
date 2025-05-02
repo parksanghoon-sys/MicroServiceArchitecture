@@ -1,4 +1,5 @@
 using ECommerce.Shared.Infrastructure.RabbitMq;
+using ECommerce.Shared.Observability;
 using Microsoft.OpenApi.Models;
 using Product.Service.Endpoints;
 using Product.Service.Infrastructure.Data.EntityFramework;
@@ -28,10 +29,13 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
+builder.Services.AddOpenTelemetryTracing("Product", (traceBuilder) => traceBuilder.WithSqlInstrumentation());
+
 builder.Services.AddSqlServerDatastore(builder.Configuration);
 
 builder.Services.AddRabbitMqEventBus(builder.Configuration)
                 .AddRabbitMqEventPublisher();
+
 
 
 var app = builder.Build();

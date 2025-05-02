@@ -6,6 +6,7 @@ using Basket.Service.IntegrationEvents;
 using Basket.Service.IntegrationEvents.EventHandlers;
 using ECommerce.Shared.Infrastructure.EventBus;
 using ECommerce.Shared.Infrastructure.RabbitMq;
+using ECommerce.Shared.Observability;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 
@@ -33,6 +34,9 @@ builder.Services.AddOpenApi(options =>
         return Task.CompletedTask;
     });
 });
+
+builder.Services.AddOpenTelemetryTracing("Basket", (traceBuilder) => traceBuilder.WithSqlInstrumentation());
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRedisCache(builder.Configuration);
 
