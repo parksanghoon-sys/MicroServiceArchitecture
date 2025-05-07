@@ -9,7 +9,7 @@ services:
     # - RABBITMQ_DEFAULT_USER=user
     # - RABBITMQ_DEFAULT_PASS=user
     networks:
-    - app-network
+      - app-network
   # postgresql:
   #   container_name: postgresql_msa
   #   image: postgres:latest
@@ -29,6 +29,7 @@ services:
     depends_on:
         #- postgresql
         - rabbitmq
+        - redis
     container_name: product  
     build: 
         context: .
@@ -37,7 +38,7 @@ services:
         - "8002:8080"
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
-        - RabbitMq__HostName=host.docker.internal
+        - RabbitMq__HostName=host.docker.internal:5672
         - ConnectionStrings__Default=Server=shpark94.synology.me;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
         # - "RabbitMq__UserName=guest"
         # - "RabbitMq__Password=guest"
@@ -45,16 +46,23 @@ services:
     container_name: basket
     depends_on:
       - redis
+      - rabbitmq
     build:
       context: .
       dockerfile: ./basket-microservice/Basket.Service/Dockerfile
     ports:
       - "8000:8080"
     environment:
-      - "RabbitMq__HostName=host.docker.internal"
+      - "RabbitMq__HostName=host.docker.internal:5672"
       - "Redis__Configuration=host.docker.internal:6379"
-#     networks:
-#       - app-network
-# networks:
-#   app-network:
-#     driver: bridge
+  jaeger:
+    container_name: jaeger
+    image: jaegertracing/all-in-one:1.58
+    ports:
+      - "4317:4317"
+      - "16686:16686"
+    networks:
+      - app-network
+  networks:
+    app-network:
+      driver: bridge
