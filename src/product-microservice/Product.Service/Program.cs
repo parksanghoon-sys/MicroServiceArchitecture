@@ -29,7 +29,7 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-builder.Services.AddOpenTelemetryTracing("Product", (traceBuilder) => traceBuilder.WithSqlInstrumentation());
+builder.Services.AddOpenTelemetryTracing("Product", builder.Configuration, (traceBuilder) => traceBuilder.WithSqlInstrumentation());
 
 builder.Services.AddSqlServerDatastore(builder.Configuration);
 

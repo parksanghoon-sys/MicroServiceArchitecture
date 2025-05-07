@@ -28,7 +28,7 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-builder.Services.AddOpenTelemetryTracing("Order", (traceBuilder) => traceBuilder.WithSqlInstrumentation());
+builder.Services.AddOpenTelemetryTracing("Order", builder.Configuration, (traceBuilder) => traceBuilder.WithSqlInstrumentation());
 
 builder.Services.AddSqlServerDatastore(builder.Configuration);
 
