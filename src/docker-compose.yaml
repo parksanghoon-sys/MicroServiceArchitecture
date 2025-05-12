@@ -38,8 +38,8 @@ services:
         - "8002:8080"
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
-        - RabbitMq__HostName=host.docker.internal:5672
-        - ConnectionStrings__Default=Server=shpark94.synology.me;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
+        - RabbitMq__HostName=192.168.0.52
+        - ConnectionStrings__Default=Server=https://192.168.0.52;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
         # - "RabbitMq__UserName=guest"
         # - "RabbitMq__Password=guest"
   basket:
@@ -53,8 +53,8 @@ services:
     ports:
       - "8000:8080"
     environment:
-      - "RabbitMq__HostName=host.docker.internal:5672"
-      - "Redis__Configuration=host.docker.internal:6379"
+      - "RabbitMq__HostName=192.168.0.52"
+      - "Redis__Configuration=https://192.168.0.52:6379"
   jaeger:
     container_name: jaeger
     image: jaegertracing/all-in-one:1.58
@@ -63,6 +63,6 @@ services:
       - "16686:16686"
     networks:
       - app-network
-  networks:
-    app-network:
-      driver: bridge
+networks:
+  app-network:
+    driver: bridge

@@ -20,7 +20,14 @@ public class RabbitMqConnection : IDisposable, IRabbitMqConnection
     {
         var factory = new ConnectionFactory
         {
-            HostName = _options.HostName            
+            HostName = _options.HostName,
+            Port = _options.Port,
+            UserName = _options.UserName,
+            Password = _options.Password,
+            // 가상 호스트 설정 (필요한 경우)
+            VirtualHost = _options.VirtualHost ?? "/",
+            // 연결 제한 시간 설정 (선택 사항)
+            RequestedConnectionTimeout = TimeSpan.FromSeconds(30)
         };
 
         _connection = factory.CreateConnection();

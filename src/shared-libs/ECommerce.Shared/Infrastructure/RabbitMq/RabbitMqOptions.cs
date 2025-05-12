@@ -3,8 +3,11 @@
 public class RabbitMqOptions
 {
     public const string RabbitMqSectionName = "RabbitMq";
-    public const string RABBITMQ_DEFAULT_USER = "guest";
-    public const string RABBITMQ_DEFAULT_PASS = "guest";
 
     public string HostName { get; set; } = string.Empty;
+    public int Port { get; set; } = 5672;
+    public string? UserName { get; set; } = "guest";
+    public string? Password { get; set; } = "guest";
+    public string? VirtualHost { get; set; } = "/";
+    public TimeSpan? RequestedConnectionTimeout { get; set; } = TimeSpan.FromSeconds(30);
 }
