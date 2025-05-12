@@ -25,6 +25,16 @@ services:
     image: redis:6.2-alpine
     ports:
       - "6379:6379"
+    networks:
+      - app-network
+  jaeger:
+    container_name: jaeger
+    image: jaegertracing/all-in-one:1.58
+    ports:
+      - "4317:4317"
+      - "16686:16686"
+    networks:
+      - app-network
   product:
     depends_on:
         #- postgresql
@@ -39,30 +49,31 @@ services:
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
         - RabbitMq__HostName=192.168.0.52
-        - ConnectionStrings__Default=Server=https://192.168.0.52;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
+        - OpenTelemetry__OtlpExporterEndpoint=https://192.168.0.52:4317
+        - Redis__Configuration=https://192.168.0.52:6379
+        - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
         # - "RabbitMq__UserName=guest"
         # - "RabbitMq__Password=guest"
+    networks:
+      - app-network
   basket:
     container_name: basket
     depends_on:
       - redis
       - rabbitmq
+      - product
     build:
       context: .
       dockerfile: ./basket-microservice/Basket.Service/Dockerfile
     ports:
       - "8000:8080"
     environment:
-      - "RabbitMq__HostName=192.168.0.52"
-      - "Redis__Configuration=https://192.168.0.52:6379"
-  jaeger:
-    container_name: jaeger
-    image: jaegertracing/all-in-one:1.58
-    ports:
-      - "4317:4317"
-      - "16686:16686"
+      - RabbitMq__HostName=192.168.0.52
+      - OpenTelemetry__OtlpExporterEndpoint=https://192.168.0.52:4317
+      - Redis__Configuration=https://192.168.0.52:6379
     networks:
       - app-network
+ 
 networks:
   app-network:
     driver: bridge
