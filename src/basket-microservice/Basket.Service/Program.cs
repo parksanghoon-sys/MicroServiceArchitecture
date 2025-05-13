@@ -35,7 +35,7 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-builder.Services.AddOpenTelemetryTracing("Basket", builder.Configuration, (traceBuilder) => traceBuilder.WithSqlInstrumentation());
+builder.Services.AddOpenTelemetryTracing("Basket", builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddRedisCache(builder.Configuration);

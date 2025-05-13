@@ -46,7 +46,7 @@ internal class ProductContext : DbContext, IProductStore
         {
             existingProduct.Name = product.Name;
             existingProduct.Price = product.Price;
-            existingProduct.Description = product.Description;
+            existingProduct.Description = product.Description;            
 
             await SaveChangesAsync();
         }

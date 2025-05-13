@@ -20,7 +20,6 @@ public static class RabbitMqStartupExtensions
 
         services.AddSingleton<IRabbitMqConnection>(new RabbitMqConnection(rabbitMqOptions));
         services.AddSingleton<RabbitMqTelemetry>();
-
         return services;
     }
     /// <summary>
@@ -39,6 +38,7 @@ public static class RabbitMqStartupExtensions
         services.Configure<EventBusOptions>(configuration.GetSection(EventBusOptions.EventBusSectionName));
 
         services.AddHostedService<RabbitMqHostedService>();
+        services.AddSingleton<RabbitMqTelemetry>();
 
         return services;
     }
