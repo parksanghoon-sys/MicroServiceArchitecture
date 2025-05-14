@@ -1,4 +1,6 @@
 services:
+
+############################ 메시지 브로커커
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -20,6 +22,7 @@ services:
   #     - "POSTGRES_PASSWORD=parktest1#"
   #   networks:
   #     - app-network
+############################ NoSql DB
   redis:
     container_name: redis
     image: redis:6.2-alpine
@@ -27,6 +30,7 @@ services:
       - "6379:6379"
     networks:
       - app-network
+############################ 모니터링 도구
   jaeger:
     container_name: jaeger
     image: jaegertracing/all-in-one:1.58
@@ -35,11 +39,26 @@ services:
       - "16686:16686"
     networks:
       - app-network
+############################ 모니터링 도구
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    user: "root"  # 개발 환경에서만 사용하세요
+    ports: 
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus-config.yaml:/etc/prometheus/prometheus.yml
+    networks:
+      - app-network
+
+################################################################ API 서비스스
   product:
     depends_on:
         #- postgresql
         - rabbitmq
         - redis
+        - jaeger
+        - prometheus
     container_name: product  
     build: 
         context: .
@@ -49,11 +68,30 @@ services:
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
         - RabbitMq__HostName=192.168.0.52
-        - OpenTelemetry__OtlpExporterEndpoint=https://192.168.0.52:4317
+        - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
         - Redis__Configuration=https://192.168.0.52:6379
         - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
         # - "RabbitMq__UserName=guest"
         # - "RabbitMq__Password=guest"
+    networks:
+      - app-network
+  order:
+    depends_on:
+      - rabbitmq
+      - redis
+      - jaeger
+      - product
+      - prometheus
+    container_name: order    
+    build: 
+      context: .
+      dockerfile: ./order-microservice/Order.Service/Dockerfile
+    ports:
+      - "8001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
+      - RabbitMq__HostName=192.168.0.52      
     networks:
       - app-network
   basket:
@@ -61,7 +99,9 @@ services:
     depends_on:
       - redis
       - rabbitmq
+      - jaeger
       - product
+      - prometheus
     build:
       context: .
       dockerfile: ./basket-microservice/Basket.Service/Dockerfile
@@ -69,8 +109,8 @@ services:
       - "8000:8080"
     environment:
       - RabbitMq__HostName=192.168.0.52
-      - OpenTelemetry__OtlpExporterEndpoint=https://192.168.0.52:4317
-      - Redis__Configuration=https://192.168.0.52:6379
+      - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
+      - Redis__Configuration=http://192.168.0.52:6379
     networks:
       - app-network
  

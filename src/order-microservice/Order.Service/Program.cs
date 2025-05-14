@@ -1,6 +1,7 @@
 using ECommerce.Shared.Infrastructure.RabbitMq;
 using ECommerce.Shared.Observability;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Metrics;
 using Order.Service.Endpoints;
 using Order.Service.Infrastructure.Data.EntityFramework;
 using Scalar.AspNetCore;
@@ -29,7 +30,12 @@ builder.Services.AddOpenApi(options =>
 });
 const string serviceName = "Order";
 
-builder.Services.AddOpenTelemetryTracing(serviceName, builder.Configuration, (traceBuilder) => traceBuilder.WithSqlInstrumentation());    
+builder.Services.AddOpenTelemetryTracing(serviceName, builder.Configuration, (traceBuilder) => 
+            traceBuilder.WithSqlInstrumentation())
+                        .AddOpenTelemetryMetrics(serviceName, builder.Services, (metricBuilder) =>
+                        {
+                            metricBuilder.AddView("products-per-order", new ExplicitBucketHistogramConfiguration { Boundaries = [1, 2, 5, 10] });
+                        });    
 
 builder.Services.AddSqlServerDatastore(builder.Configuration);
 
@@ -39,6 +45,8 @@ builder.Services.AddRabbitMqEventBus(builder.Configuration)
     .AddRabbitMqEventPublisher();    
 
 var app = builder.Build();
+
+app.UsePrometheusExporter();
 
 app.RegisterEndpoints();
 app.MapOpenApi();
