@@ -16,10 +16,12 @@ services:
     container_name: postgresql_msa
     image: postgres:latest
     ports:
-      - "15432:15432"
+      - "45432:5432"
     environment:
-      - "POSTGRES_USER=postgres"
-      - "POSTGRES_PASSWORD=parktest1#"
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=parktest1#
+    volumes:
+      - /volume1/docker/postgresSql/postgres_msa_data:/var/lib/postgresql/data
     networks:
       - app-network
 ############################ NoSql DB
@@ -52,48 +54,8 @@ services:
       - app-network
 
 ################################################################ API 서비스스
-  product:
-    depends_on:
-        #- postgresql
-        - rabbitmq
-        - redis
-        - jaeger
-        - prometheus
-    container_name: product  
-    build: 
-        context: .
-        dockerfile: ./product-microservice/Product.Service/Dockerfile
-    ports:
-        - "8002:8080"
-    environment:
-        - ASPNETCORE_ENVIRONMENT=Development
-        - RabbitMq__HostName=192.168.0.52
-        - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
-        - Redis__Configuration=192.168.0.52:6379
-        - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
-        # - "RabbitMq__UserName=guest"
-        # - "RabbitMq__Password=guest"
-    networks:
-      - app-network
-  order:
-    depends_on:
-      - rabbitmq
-      - redis
-      - jaeger
-      - product
-      - prometheus
-    container_name: order    
-    build: 
-      context: .
-      dockerfile: ./order-microservice/Order.Service/Dockerfile
-    ports:
-      - "8001:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
-      - RabbitMq__HostName=192.168.0.52      
-    networks:
-      - app-network
+ 
+  
   basket:
     container_name: basket
     depends_on:
@@ -109,11 +71,58 @@ services:
       - "8000:8080"
     environment:
       - RabbitMq__HostName=192.168.0.52
+      #- ASPNETCORE_URLS=http://0.0.0.0:8080
       - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
       - Redis__Configuration=192.168.0.52:6379
     networks:
       - app-network
- 
+
+
+  order:
+    depends_on:
+      - rabbitmq
+      - redis
+      - jaeger
+      - product
+      - prometheus
+    container_name: order    
+    build: 
+      context: .
+      dockerfile: ./order-microservice/Order.Service/Dockerfile
+    ports:
+      - "8001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      #- ASPNETCORE_URLS=http://0.0.0.0:8081
+      - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=45432;User Id=postgres;Password=parktest1#;
+      - RabbitMq__HostName=192.168.0.52      
+    networks:
+      - app-network
+
+  product:
+    depends_on:
+        #- postgresql
+        - rabbitmq
+        - redis
+        - jaeger
+        - prometheus
+    container_name: product  
+    build: 
+        context: .
+        dockerfile: ./product-microservice/Product.Service/Dockerfile
+    ports:
+        - "8002:8080"
+    environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+        # - ASPNETCORE_URLS=http://0.0.0.0:8082
+        - RabbitMq__HostName=192.168.0.52
+        - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
+        - Redis__Configuration=192.168.0.52:6379
+        - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=45432;User Id=postgres;Password=parktest1#;
+        # - "RabbitMq__UserName=guest"
+        # - "RabbitMq__Password=guest"
+    networks:
+      - app-network
 networks:
   app-network:
     driver: bridge

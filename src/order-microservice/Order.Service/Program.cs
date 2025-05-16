@@ -42,7 +42,12 @@ builder.Services.AddSqlServerDatastore(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddRabbitMqEventBus(builder.Configuration)
-    .AddRabbitMqEventPublisher();    
+    .AddRabbitMqEventPublisher();
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8001);
+});
 
 var app = builder.Build();
 
