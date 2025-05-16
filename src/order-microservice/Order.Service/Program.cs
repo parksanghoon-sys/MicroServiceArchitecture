@@ -46,7 +46,7 @@ builder.Services.AddRabbitMqEventBus(builder.Configuration)
 
 var app = builder.Build();
 
-app.UsePrometheusExporter();
+app.UsePrometheunExporter();
 
 app.RegisterEndpoints();
 app.MapOpenApi();

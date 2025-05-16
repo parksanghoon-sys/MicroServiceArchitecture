@@ -48,5 +48,8 @@ public static class OpenTelemetryStartupExtensions
                 customMetrics?.Invoke(builder);
             });
     }
-    public static TracerProviderBuilder WithSqlInstrumentation(this TracerProviderBuilder builder) => builder.AddSqlClientInstrumentation();
+    public static TracerProviderBuilder WithSqlInstrumentation(this TracerProviderBuilder builder)
+        => builder.AddSqlClientInstrumentation();
+    public static void UsePrometheunExporter(this WebApplication webApplication)
+        => webApplication.UseOpenTelemetryPrometheusScrapingEndpoint();
 }

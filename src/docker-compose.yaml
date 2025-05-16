@@ -12,16 +12,16 @@ services:
     # - RABBITMQ_DEFAULT_PASS=user
     networks:
       - app-network
-  # postgresql:
-  #   container_name: postgresql_msa
-  #   image: postgres:latest
-  #   ports:
-  #     - "15432:15432"
-  #   environment:
-  #     - "POSTGRES_USER=postgres"
-  #     - "POSTGRES_PASSWORD=parktest1#"
-  #   networks:
-  #     - app-network
+  postgresql:
+    container_name: postgresql_msa
+    image: postgres:latest
+    ports:
+      - "15432:15432"
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=parktest1#"
+    networks:
+      - app-network
 ############################ NoSql DB
   redis:
     container_name: redis
@@ -30,7 +30,7 @@ services:
       - "6379:6379"
     networks:
       - app-network
-############################ 모니터링 도구
+############################ jaeger 모니터링 도구
   jaeger:
     container_name: jaeger
     image: jaegertracing/all-in-one:1.58
@@ -39,7 +39,7 @@ services:
       - "16686:16686"
     networks:
       - app-network
-############################ 모니터링 도구
+############################ prometheus 모니터링 도구
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
@@ -69,7 +69,7 @@ services:
         - ASPNETCORE_ENVIRONMENT=Development
         - RabbitMq__HostName=192.168.0.52
         - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
-        - Redis__Configuration=https://192.168.0.52:6379
+        - Redis__Configuration=192.168.0.52:6379
         - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=25432;User Id=postgres;Password=parktest1#;
         # - "RabbitMq__UserName=guest"
         # - "RabbitMq__Password=guest"
@@ -110,7 +110,7 @@ services:
     environment:
       - RabbitMq__HostName=192.168.0.52
       - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
-      - Redis__Configuration=http://192.168.0.52:6379
+      - Redis__Configuration=192.168.0.52:6379
     networks:
       - app-network
  

@@ -15,6 +15,7 @@ namespace Order.Service.Infrastructure.Data.EntityFramework
 
             builder.Property(p => p.Quantity)
                 .IsRequired();
+         
         }
     }
 }

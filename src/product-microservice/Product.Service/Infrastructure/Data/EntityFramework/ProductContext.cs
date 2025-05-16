@@ -15,7 +15,7 @@ internal class ProductContext : DbContext, IProductStore
     {
         if(optionsBuilder.IsConfigured == false)
         {
-            optionsBuilder.UseNpgsql("Server=127.0.0.1;Database=Product;Port=5432;User Id=postgres;Password=gcstest1#;");
+            // optionsBuilder.UseNpgsql("Server=127.0.0.1;Database=Product;Port=5432;User Id=postgres;Password=gcstest1#;");
         }
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)

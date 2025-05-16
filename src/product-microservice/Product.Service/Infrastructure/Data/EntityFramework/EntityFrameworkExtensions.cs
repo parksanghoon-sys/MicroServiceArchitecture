@@ -4,13 +4,19 @@ namespace Product.Service.Infrastructure.Data.EntityFramework
 {
     public static class EntityFrameworkExtensions
     {
-        public static void AddSqlServerDatastore(this IServiceCollection service, IConfigurationManager configuration)
+        public static void AddSqlServerDatastore(this IServiceCollection services, IConfigurationManager configuration)
         {
-            var dbConnectionString = configuration.GetConnectionString("Default");
-            service.AddDbContext<ProductContext>(option =>
-                option.UseNpgsql(dbConnectionString));
+            services.AddDbContext<ProductContext>(options =>
+                 options.UseNpgsql(configuration.GetConnectionString("Default"),
+                 npgsqlOptionsAction: npgsqlOptions =>
+                 {
+                     npgsqlOptions.EnableRetryOnFailure(
+                         maxRetryCount: 5,
+                         maxRetryDelay: TimeSpan.FromSeconds(40),
+                         errorCodesToAdd: null);
+                 }));
 
-            service.AddScoped<IProductStore, ProductContext>();
+            services.AddScoped<IProductStore, ProductContext>();
         }
     }
 }
