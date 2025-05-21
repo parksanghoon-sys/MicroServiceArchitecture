@@ -30,7 +30,7 @@ namespace Product.Service.Endpoints
                     : TypedResults.Ok(new GetProductTypesResponse(producttypes));
         }
 
-        internal static async Task<IResult> GetProductIdIProductStore (IProductStore productStore,                         
+        internal static async Task<IResult> GetProductIdIProductStore(IProductStore productStore,
             int productId)
         {
             var product = await productStore.GetById(productId);
@@ -57,8 +57,8 @@ namespace Product.Service.Endpoints
 
         internal static async Task<IResult> UpdateProduct(IProductStore productStore,
             IEventBus eventBus,
-            IOutboxStore outboxStore,            
-            int productId, 
+            IOutboxStore outboxStore,
+            int productId,
             UpdateProductRequest request)
         {
             var product = await productStore.GetById(productId);
@@ -75,23 +75,23 @@ namespace Product.Service.Endpoints
             product.ProductTypeId = request.ProductTypeId;
             product.Description = request.Description;
 
-             await outboxStore.CreateExecutionStrategy().ExecuteAsync(async () =>
-            {
-                using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            await outboxStore.CreateExecutionStrategy().ExecuteAsync(async () =>
+           {
+               using var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
-                await productStore.UpdateProduct(product);
+               await productStore.UpdateProduct(product);
 
-                if (!decimal.Equals(existingPrice, request.Price))
-                {
-                    await outboxStore.AddOutboxEventAsync(new ProductPriceUpdatedEvent(productId, request.Price));
-                }
+               if (!decimal.Equals(existingPrice, request.Price))
+               {
+                   await outboxStore.AddOutboxEventAsync(new ProductPriceUpdatedEvent(productId, request.Price));
+               }
 
-                scope.Complete();
-            });
+               scope.Complete();
+           });
 
 
             return TypedResults.NoContent();
         }
 
-    }    
+    }
 }

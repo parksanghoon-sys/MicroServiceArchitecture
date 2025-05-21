@@ -1,3 +1,4 @@
+using ECommerce.Shared.Infrastructure.Outbox;
 using ECommerce.Shared.Infrastructure.RabbitMq;
 using ECommerce.Shared.Observability;
 using Microsoft.OpenApi.Models;
@@ -39,7 +40,9 @@ builder.Services.AddOpenTelemetryTracing(serviceName, builder.Configuration, (tr
                         .AddOpenTelemetryMetrics(serviceName, builder.Services, (metricBuilder) =>
                         {
                             metricBuilder.AddView("products-per-order", new ExplicitBucketHistogramConfiguration { Boundaries = [1, 2, 5, 10] });
-                        });    
+                        });
+
+builder.Services.AddOutbox(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -61,6 +64,7 @@ app.MapScalarApiReference(options =>
 if (app.Environment.IsDevelopment())
 {
     app.MigrateDatabase();
+    app.ApplyOutboxMigrations();
 }
 
 app.UseHttpsRedirection();
