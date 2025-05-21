@@ -1,3 +1,4 @@
+using ECommerce.Shared.Infrastructure.Outbox;
 using ECommerce.Shared.Infrastructure.RabbitMq;
 using ECommerce.Shared.Observability;
 using Microsoft.OpenApi.Models;
@@ -29,23 +30,21 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
-builder.Services.AddOpenTelemetryTracing("Product", builder.Configuration, (traceBuilder) => traceBuilder.WithSqlInstrumentation());
-
 builder.Services.AddSqlServerDatastore(builder.Configuration);
 
 builder.Services.AddRabbitMqEventBus(builder.Configuration)
                 .AddRabbitMqEventPublisher();
+builder.Services.AddOpenTelemetryTracing("Product", builder.Configuration, (traceBuilder) => traceBuilder.WithSqlInstrumentation());
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(8002);
-});
+builder.Services.AddOutbox(builder.Configuration);
+
 
 var app = builder.Build();
 
 if(app.Environment.IsDevelopment())
 {
     app.MigrateDatabase();
+    app.ApplyOutboxMigrations();
 }
 
 app.RegisterEndpoints();

@@ -29,6 +29,10 @@ builder.Services.AddOpenApi(options =>
     });
 });
 const string serviceName = "Order";
+builder.Services.AddSqlServerDatastore(builder.Configuration);
+
+builder.Services.AddRabbitMqEventBus(builder.Configuration)
+    .AddRabbitMqEventPublisher();
 
 builder.Services.AddOpenTelemetryTracing(serviceName, builder.Configuration, (traceBuilder) => 
             traceBuilder.WithSqlInstrumentation())
@@ -37,17 +41,7 @@ builder.Services.AddOpenTelemetryTracing(serviceName, builder.Configuration, (tr
                             metricBuilder.AddView("products-per-order", new ExplicitBucketHistogramConfiguration { Boundaries = [1, 2, 5, 10] });
                         });    
 
-builder.Services.AddSqlServerDatastore(builder.Configuration);
-
 builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddRabbitMqEventBus(builder.Configuration)
-    .AddRabbitMqEventPublisher();
-
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(8001);
-});
 
 var app = builder.Build();
 
