@@ -1,5 +1,4 @@
 ﻿using RabbitMQ.Client;
-using RabbitMQ.Client.Exceptions;
 
 namespace ECommerce.Shared.Infrastructure.RabbitMq;
 

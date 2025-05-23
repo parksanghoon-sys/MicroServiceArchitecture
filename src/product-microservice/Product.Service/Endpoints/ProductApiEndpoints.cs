@@ -1,6 +1,5 @@
 ﻿using ECommerce.Shared.Infrastructure.EventBus.Abstractions;
 using ECommerce.Shared.Infrastructure.Outbox;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Product.Service.ApiModels;
 using Product.Service.Infrastructure.Data;
