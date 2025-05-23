@@ -2,7 +2,6 @@
 using Order.Service.Infrastructure.Data;
 using ECommerce.Shared.Infrastructure.EventBus.Abstractions;
 using Order.Service.IntegrationEvents;
-using System.Diagnostics.Metrics;
 using ECommerce.Shared.Observability.Metrics;
 using ECommerce.Shared.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
