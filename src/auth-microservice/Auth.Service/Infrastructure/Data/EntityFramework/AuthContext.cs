@@ -1,5 +1,6 @@
 ﻿using Auth.Service.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Service.Infrastructure.Data.EntityFramework;
 

@@ -24,8 +24,8 @@ namespace Auth.Service.Services
             _roleManager = roleManager;
         }
         public async Task<bool> AssignRole(string email, string roleName)
-        {
-            var user = _db.ApplicationUsers(u => u.Email.ToLower() == email.ToLower());
+        {            
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
             if (user != null)
             {
                 if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())

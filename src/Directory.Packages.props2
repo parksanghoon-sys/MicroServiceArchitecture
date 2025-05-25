@@ -2,28 +2,28 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <TargetFrameworkVersion>9.0.0</TargetFrameworkVersion>
+    <TargetFramework>9.0.0</TargetFramework>
     <JwtBearerVersion>9.0.1</JwtBearerVersion>
     <MicrosoftExtensionsVersion>9.0.0</MicrosoftExtensionsVersion>
     <OpenTelemetryVersion>1.9.0</OpenTelemetryVersion>
   </PropertyGroup>
   <ItemGroup>
     <!-- Version together with Aspire -->
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(JwtBearerVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(TargetFrameworkVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="$(TargetFrameworkVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(TargetFrameworkVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(TargetFrameworkVersion)" />
-    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(TargetFrameworkVersion)" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(TargetFrameworkVersion)" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="$(TargetFrameworkVersion)" >
+	  <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="$(JwtBearerVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="$(MicrosoftExtensionsVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="$(MicrosoftExtensionsVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="$(MicrosoftExtensionsVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="$(MicrosoftExtensionsVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="$(MicrosoftExtensionsVersion)" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(MicrosoftExtensionsVersion)" />
+	 <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="$(MicrosoftExtensionsVersion)" >
           	<PrivateAssets>all</PrivateAssets>
         	<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    </PackageVersion>
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="$(JwtBearerVersion)" />
 
     <PackageVersion Include="Polly.Core" Version="8.4.1" />
-    <PackageVersion Include="RabbitMQ.Client"Version="6.8.1" />
+    <PackageVersion Include="RabbitMQ.Client" Version="6.8.1" />
 
     <!-- Version together with OpenTelemetry-->
     <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="$(OpenTelemetryVersion)" />
@@ -33,9 +33,9 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="$(OpenTelemetryVersion)" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.SqlClient" Version="1.9.0-beta.1" />
 
-    <PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspnetVersion)" />
+    <!--<PackageVersion Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="$(AspnetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.QuickGrid" Version="$(AspnetVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="$(AspnetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="$(AspnetVersion)" />-->
 
     <PackageVersion Include="Scalar.AspNetCore" Version="2.0.36"/>
   </ItemGroup>
