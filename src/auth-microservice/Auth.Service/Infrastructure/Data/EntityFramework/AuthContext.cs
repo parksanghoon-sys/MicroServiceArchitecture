@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Auth.Service.Infrastructure.Data.EntityFramework;
 
-public class AuthContext : IdentityDbContext<ApplicationUser>
+public class AuthContext : IdentityDbContext<ApplicationUser>, IAuthStore
 {
     public AuthContext(DbContextOptions<AuthContext> options)
         : base(options)
@@ -16,6 +16,7 @@ public class AuthContext : IdentityDbContext<ApplicationUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserConfiguration());
+        base.OnModelCreating(modelBuilder);
     }
 
     //public async Task<User?> VerifyUserLogin(string username, string password) 

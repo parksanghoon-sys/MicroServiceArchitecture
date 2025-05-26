@@ -1,3 +1,3 @@
 ﻿namespace Auth.Service.ApiModels;
 
-public record LoginResponseDto(UserDto User, string Token);
+public record LoginResponseDto(UserDto? User, string Token);

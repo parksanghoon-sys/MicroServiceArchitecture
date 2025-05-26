@@ -8,7 +8,11 @@ namespace Auth.Service.Infrastructure.Data.EntityFramework
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            throw new NotImplementedException();
+            builder.Property(p => p.Email).IsRequired();
+            builder.Property(p => p.FirstName).IsRequired();
+            builder.Property(p => p.LastName).IsRequired();
+
+
         }
     }
 }

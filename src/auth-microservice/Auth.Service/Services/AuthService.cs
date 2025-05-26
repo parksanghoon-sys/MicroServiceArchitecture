@@ -12,20 +12,23 @@ namespace Auth.Service.Services
         private readonly AuthContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILogger<AuthService> _logger;
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         public AuthService(AuthContext authContext, 
             IJwtTokenGenerator jwtTokenGenerator,
             UserManager<ApplicationUser> userManager, 
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            ILogger<AuthService> logger)
         {
             _db = authContext;
             _userManager = userManager;
             _jwtTokenGenerator = jwtTokenGenerator;
             _roleManager = roleManager;
+            _logger = logger;
         }
         public async Task<bool> AssignRole(string email, string roleName)
         {            
-            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email!.ToLower().Equals(email.ToLower()));
             if (user != null)
             {
                 if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
@@ -39,14 +42,59 @@ namespace Auth.Service.Services
             return false;
         }
 
-        public Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
+        public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
-            throw new NotImplementedException();
+            var user = _db.ApplicationUsers.FirstOrDefault
+                        (u => u.Email!.ToLower().Equals(loginRequestDto.Email.ToLower()));
+
+            if (user is not null)
+            {
+                bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
+                if (user is null || isValid is false)
+                    return new LoginResponseDto(User: null, Token: "");
+
+                var roles = await _userManager.GetRolesAsync(user);
+                var token = _jwtTokenGenerator.GenerateToken(user, roles);
+
+                UserDto userDto = new(Email: user.Email!, Name: user.UserName, PhoneNumber: user.PhoneNumber);
+
+                LoginResponseDto loginResponseDto = new(User: userDto, Token: token);
+
+                return loginResponseDto;
+            }
+            else
+                return new LoginResponseDto(User: null, Token: "");
         }
 
-        public Task<string> Register(RegistrationRequestDto registrationRequestDto)
+        public async Task<string> Register(RegistrationRequestDto registrationRequestDto)
         {
-            throw new NotImplementedException();
+            ApplicationUser user = new()
+            {
+                Email = registrationRequestDto.Email,
+                FirstName = registrationRequestDto.FirstName,
+                LastName = registrationRequestDto.LastName,
+                PhoneNumber = registrationRequestDto.PhoneNumber,
+            };
+            try
+            {
+                var result = await _userManager.CreateAsync(user, registrationRequestDto.Password);
+                if(result.Succeeded == true)
+                {
+                    var userToRetrun = _db.ApplicationUsers.First(u => u.Email!.Equals(registrationRequestDto.Email));
+                    UserDto userDto = new(Email: user.Email!, Name: user.UserName, PhoneNumber: user.PhoneNumber);
+
+                    return userDto.Email;
+                }
+                else
+                {
+                    return result.Errors.FirstOrDefault()?.Description ?? "Error";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical($"{nameof(Register)} Error {ex}");
+            }
+            return "Error Encountered";
         }
     }
 }

@@ -1,3 +1,3 @@
 ﻿namespace Auth.Service.ApiModels;
 
-public record LoginRequestDto(string UserName, string Password);
+public record LoginRequestDto(string Email, string Password);
