@@ -4,6 +4,7 @@ using Auth.Service.Models;
 using Auth.Service.Services.IService;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Auth.Service.Services
 {
@@ -52,13 +53,12 @@ namespace Auth.Service.Services
                 bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
                 if (user is null || isValid is false)
                     return new LoginResponseDto(User: null, Token: "");
-
-                var roles = await _userManager.GetRolesAsync(user);
-                var token = _jwtTokenGenerator.GenerateToken(user, roles);
+                
+                var token = await _jwtTokenGenerator.GenerateToken(user);
 
                 UserDto userDto = new(Email: user.Email!, Name: user.UserName, PhoneNumber: user.PhoneNumber);
 
-                LoginResponseDto loginResponseDto = new(User: userDto, Token: token);
+                LoginResponseDto loginResponseDto = new(User: userDto, Token: new JwtSecurityTokenHandler().WriteToken(token));
 
                 return loginResponseDto;
             }

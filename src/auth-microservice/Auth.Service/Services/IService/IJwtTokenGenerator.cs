@@ -1,9 +1,10 @@
 ﻿using Auth.Service.Models;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Auth.Service.Services.IService
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(ApplicationUser applicationUser, IEnumerable<string> roles);
+        Task<JwtSecurityToken> GenerateToken(ApplicationUser applicationUser);
     }
 }

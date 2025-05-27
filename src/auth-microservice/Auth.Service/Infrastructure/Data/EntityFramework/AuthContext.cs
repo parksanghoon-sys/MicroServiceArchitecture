@@ -13,6 +13,15 @@ public class AuthContext : IdentityDbContext<ApplicationUser>, IAuthStore
     }
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
+    public async Task<List<ApplicationUser>> GatUserAll()
+    {
+        if(ApplicationUsers is not null)
+        {
+            return await ApplicationUsers.ToListAsync();
+        }
+        return default;
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserConfiguration());
