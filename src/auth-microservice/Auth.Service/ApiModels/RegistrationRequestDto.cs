@@ -1,3 +1,3 @@
 ﻿namespace Auth.Service.ApiModels;
 
-public record RegistrationRequestDto(string Email, string FirstName,string LastName, string? PhoneNumber, string Password, string? Role);
+public record RegistrationRequestDto(string UserId, string Email, string UserName, string? PhoneNumber, string Password, string? Role);

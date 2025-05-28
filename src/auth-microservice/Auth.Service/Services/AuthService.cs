@@ -46,7 +46,7 @@ namespace Auth.Service.Services
         public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
         {
             var user = _db.ApplicationUsers.FirstOrDefault
-                        (u => u.Email!.ToLower().Equals(loginRequestDto.Email.ToLower()));
+                        (u => u.UserId.Equals(loginRequestDto.UserId));
 
             if (user is not null)
             {
@@ -56,7 +56,7 @@ namespace Auth.Service.Services
                 
                 var token = await _jwtTokenGenerator.GenerateToken(user);
 
-                UserDto userDto = new(Email: user.Email!, Name: user.UserName, PhoneNumber: user.PhoneNumber);
+                UserDto userDto = new(UserId:user.UserId, Email: user.Email!, Name: user.UserName!, PhoneNumber: user.PhoneNumber);
 
                 LoginResponseDto loginResponseDto = new(User: userDto, Token: new JwtSecurityTokenHandler().WriteToken(token));
 
@@ -71,9 +71,9 @@ namespace Auth.Service.Services
             ApplicationUser user = new()
             {
                 Email = registrationRequestDto.Email,
-                FirstName = registrationRequestDto.FirstName,
-                LastName = registrationRequestDto.LastName,
-                PhoneNumber = registrationRequestDto.PhoneNumber,
+                PhoneNumber = registrationRequestDto.PhoneNumber,      
+                UserName = registrationRequestDto.UserName,
+                UserId = registrationRequestDto.UserId,
             };
             try
             {
@@ -81,7 +81,7 @@ namespace Auth.Service.Services
                 if(result.Succeeded == true)
                 {
                     var userToRetrun = _db.ApplicationUsers.First(u => u.Email!.Equals(registrationRequestDto.Email));
-                    UserDto userDto = new(Email: user.Email!, Name: user.UserName, PhoneNumber: user.PhoneNumber);
+                    UserDto userDto = new(UserId:user.UserId, Email: user.Email!, Name: user.UserName, PhoneNumber: user.PhoneNumber);
 
                     return userDto.Email;
                 }

@@ -9,8 +9,8 @@ namespace Auth.Service.Infrastructure.Data.EntityFramework
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             builder.Property(p => p.Email).IsRequired();
-            builder.Property(p => p.FirstName).IsRequired();
-            builder.Property(p => p.LastName).IsRequired();
+            builder.Property(p => p.UserId).IsRequired();
+            //builder.Property(p => p.LastName).IsRequired();
 
 
         }

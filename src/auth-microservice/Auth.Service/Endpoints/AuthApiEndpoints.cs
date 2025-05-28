@@ -42,7 +42,7 @@ namespace Auth.Service.Endpoints
             var methodName = method.Name;
             return (className, methodName);
         }
-        [Authorize]
+        //[Authorize]
         private static async Task<IResult> GetUsers(IAuthStore authStore)
         {
             return Results.Ok(await authStore.GatUserAll());
