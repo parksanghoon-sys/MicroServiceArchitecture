@@ -29,7 +29,7 @@ public static class AuthenticationExtensions
                 ValidateIssuerSigningKey = true,
                 ValidateAudience = true,
                 ValidIssuer = authOptions.AuthMicroserviceBaseAddress,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authOptions.JwtOptions!.SecurityKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authOptions.JwtOptions!.SecurityKey)),
                 ValidAudience = authOptions.JwtOptions!.Audience
             };
         });

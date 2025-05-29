@@ -70,10 +70,12 @@ services:
     ports:
       - "8000:8080"
     environment:
-      - RabbitMq__HostName=192.168.0.52
+      # - RabbitMq__HostName=192.168.0.52
       #- ASPNETCORE_URLS=http://0.0.0.0:8080
-      - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
-      - Redis__Configuration=192.168.0.52:6379
+      # - Redis__Configuration=192.168.0.52:6379
+      # - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
+      - "RabbitMq__HostName=192.168.20.52"
+      - "Redis__Configuration=192.168.20.52:6379"
     networks:
       - app-network
 
@@ -94,8 +96,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       #- ASPNETCORE_URLS=http://0.0.0.0:8081
-      - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=45432;User Id=postgres;Password=parktest1#;
-      - RabbitMq__HostName=192.168.0.52      
+      - ConnectionStrings__Default=Server=192.168.20.52;Database=Order;Port=45432;User Id=postgres;Password=parktest1#;
+      - RabbitMq__HostName=192.168.20.52      
     networks:
       - app-network
 
@@ -115,14 +117,25 @@ services:
     environment:
         - ASPNETCORE_ENVIRONMENT=Development
         # - ASPNETCORE_URLS=http://0.0.0.0:8082
-        - RabbitMq__HostName=192.168.0.52
-        - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
-        - Redis__Configuration=192.168.0.52:6379
-        - ConnectionStrings__Default=Server=192.168.0.52;Database=Product;Port=45432;User Id=postgres;Password=parktest1#;
+        # - RabbitMq__HostName=192.168.0.52
+        - "RabbitMq__HostName=192.168.20.52"
+        # - OpenTelemetry__OtlpExporterEndpoint=http://192.168.0.52:4317
+        - "Redis__Configuration=192.168.20.52:6379"
+        - ConnectionStrings__Default=Server=192.168.20.52;Database=Product;Port=45432;User Id=postgres;Password=parktest1#;
         # - "RabbitMq__UserName=guest"
         # - "RabbitMq__Password=guest"
     networks:
       - app-network
+  auth:
+    container_name: auth
+    build: 
+      context: .
+      dockerfile: ./auth-microservice/Auth.Service/Dockerfile
+    ports:
+      - "8003:8080"
+    environment:
+      - "ASPNETCORE_ENVIRONMENT=Development"
+      - ConnectionStrings__Default=Server=192.168.20.52;Database=Product;Port=45432;User Id=postgres;Password=parktest1#;
 networks:
   app-network:
     driver: bridge

@@ -20,8 +20,8 @@ internal class ProductContext : DbContext, IProductStore
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new ProductConfiguration());
-        modelBuilder.ApplyConfiguration(new ProductTypeConfiguration());
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ProductContext).Assembly);
     }
 
     public async Task<Models.Product?> GetById(int id)

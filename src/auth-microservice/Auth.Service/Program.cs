@@ -36,6 +36,8 @@ builder.Services.AddSqlServerDatastore(builder.Configuration);
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

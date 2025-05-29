@@ -54,8 +54,7 @@ namespace Product.Service.Endpoints
             return TypedResults.Created(product.Id.ToString());
         }
 
-        internal static async Task<IResult> UpdateProduct(IProductStore productStore,
-            IEventBus eventBus,
+        internal static async Task<IResult> UpdateProduct(IProductStore productStore,            
             IOutboxStore outboxStore,
             int productId,
             UpdateProductRequest request)
