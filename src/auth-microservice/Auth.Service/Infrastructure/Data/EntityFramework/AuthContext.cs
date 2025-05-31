@@ -30,8 +30,8 @@ public class AuthContext : IdentityDbContext<ApplicationUser>, IAuthStore
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthContext).Assembly);
         base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthContext).Assembly);
     }
 
     //public async Task<User?> VerifyUserLogin(string username, string password) 

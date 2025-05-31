@@ -126,16 +126,7 @@ services:
         # - "RabbitMq__Password=guest"
     networks:
       - app-network
-  auth:
-    container_name: auth
-    build: 
-      context: .
-      dockerfile: ./auth-microservice/Auth.Service/Dockerfile
-    ports:
-      - "8003:8080"
-    environment:
-      - "ASPNETCORE_ENVIRONMENT=Development"
-      - ConnectionStrings__Default=Server=192.168.20.52;Database=Product;Port=45432;User Id=postgres;Password=parktest1#;
+  
 networks:
   app-network:
     driver: bridge
