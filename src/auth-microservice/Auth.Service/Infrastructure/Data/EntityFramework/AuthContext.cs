@@ -1,4 +1,5 @@
-﻿using Auth.Service.Models;
+﻿using Auth.Service.Infrastructure.Data.EntityFramework.Configurations;
+using Auth.Service.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -30,8 +31,11 @@ public class AuthContext : IdentityDbContext<ApplicationUser>, IAuthStore
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+   
+        modelBuilder.ApplyConfiguration(new RoleConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AuthContext).Assembly);
     }
 
     //public async Task<User?> VerifyUserLogin(string username, string password) 
