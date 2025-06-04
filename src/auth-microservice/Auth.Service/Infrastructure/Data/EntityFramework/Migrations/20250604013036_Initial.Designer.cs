@@ -3,6 +3,7 @@ using System;
 using Auth.Service.Infrastructure.Data.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Auth.Service.Infrastructure.Data.EntityFramework.Migrations
 {
     [DbContext(typeof(AuthContext))]
-    partial class AuthContextModelSnapshot : ModelSnapshot
+    [Migration("20250604013036_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,15 +98,15 @@ namespace Auth.Service.Infrastructure.Data.EntityFramework.Migrations
                         {
                             Id = "8e445865-a24d-4543-a6c6-9443d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2d6ebf06-bd20-4def-a812-4ac21c85cf79",
+                            ConcurrencyStamp = "e8f27920-96b9-4f21-8292-85eedb460d0d",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENHdTrEGp9HBUdfoYleVuVwpGxkJh1Z6EMW1FYNdkV5xmrUXJjWMBqyrZ8P3RocyZA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEL3Od2JQgYNq7oVjWzzBSsZW631DkNNv6/51fQCtkszA6hQ/mn5LwUotzVf/qm2USg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3195ec3b-fbc1-42f9-bd2b-b09f84f3e113",
+                            SecurityStamp = "cdb6e2f6-3baf-4d78-8dc3-8b4575875dab",
                             TwoFactorEnabled = false,
                             UserId = "Admin123",
                             UserName = "admin@localhost.com"
@@ -112,15 +115,15 @@ namespace Auth.Service.Infrastructure.Data.EntityFramework.Migrations
                         {
                             Id = "9e224968-33e4-4652-b7b7-8574d048cdb9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "64f73619-3b5d-411b-8213-1a0dcdfe5f00",
+                            ConcurrencyStamp = "287eda56-dd8f-4a72-8c96-37e4a224e1c4",
                             Email = "user@localhost.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKdCyy/eYVE1dcAMxqoY4bFfDxIHLysjOzajvuRlnCyuqgRuwQ1PqJRcoG1RZHi2WQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECerx2f8cQg/hfhxDfMJJBYGSSjBH5iJ0cucl0U3ud6aBnMJzWfkk0CaDEFRQTRXqA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5b046b80-c8cd-4c26-99ea-cf28eba974fb",
+                            SecurityStamp = "eb8b774a-ea97-4fb1-8301-65c64ab90292",
                             TwoFactorEnabled = false,
                             UserId = "User123",
                             UserName = "user@localhost.com"
@@ -283,43 +286,6 @@ namespace Auth.Service.Infrastructure.Data.EntityFramework.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Auth.Service.Models.ApplicationUser", b =>
-                {
-                    b.OwnsMany("Auth.Service.Models.RefreshToken", "RefreshTokens", b1 =>
-                        {
-                            b1.Property<string>("ApplicationUserId")
-                                .HasColumnType("text");
-
-                            b1.Property<int>("Id")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("integer");
-
-                            NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b1.Property<int>("Id"));
-
-                            b1.Property<DateTime>("Created")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<DateTime>("Expires")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<DateTime?>("Revoked")
-                                .HasColumnType("timestamp with time zone");
-
-                            b1.Property<string>("Token")
-                                .IsRequired()
-                                .HasColumnType("text");
-
-                            b1.HasKey("ApplicationUserId", "Id");
-
-                            b1.ToTable("RefreshToken");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ApplicationUserId");
-                        });
-
-                    b.Navigation("RefreshTokens");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

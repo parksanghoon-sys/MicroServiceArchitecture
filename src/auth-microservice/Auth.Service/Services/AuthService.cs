@@ -54,11 +54,11 @@ namespace Auth.Service.Services
                 if (user is null || isValid is false)
                     return new LoginResponseDto(User: null, Token: "");
                 
-                var token = await _jwtTokenGenerator.GenerateToken(user);
+                var token = await _jwtTokenGenerator.GetTokenAsync(new TokenRequestDto(user.Email));
 
                 UserDto userDto = new(UserId:user.UserId, Email: user.Email!, Name: user.UserName!, PhoneNumber: user.PhoneNumber);
 
-                LoginResponseDto loginResponseDto = new(User: userDto, Token: new JwtSecurityTokenHandler().WriteToken(token));
+                LoginResponseDto loginResponseDto = new(User: userDto, Token: token.Token);
 
                 return loginResponseDto;
             }
@@ -96,5 +96,6 @@ namespace Auth.Service.Services
             }
             return "Error Encountered";
         }
+  
     }
 }

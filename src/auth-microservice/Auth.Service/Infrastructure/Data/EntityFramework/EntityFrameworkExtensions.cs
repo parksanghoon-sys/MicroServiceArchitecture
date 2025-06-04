@@ -1,6 +1,7 @@
 ﻿using Auth.Service.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -18,14 +19,16 @@ namespace Auth.Service.Infrastructure.Data.EntityFramework
                                   maxRetryCount: 5,
                                   maxRetryDelay: TimeSpan.FromSeconds(40),
                                   errorCodesToAdd: null);
-                          }));
+                          })
+                          .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning))
+                          .EnableDetailedErrors());
 
 
-            services.AddScoped<IAuthStore, AuthContext>();
+
             services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AuthContext>()
                         .AddDefaultTokenProviders();
 
-
+            services.AddScoped<IAuthStore, AuthContext>();
         }
     }
 }

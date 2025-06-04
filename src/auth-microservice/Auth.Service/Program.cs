@@ -30,6 +30,7 @@ builder.Services.AddOpenApi(options =>
     });
 });
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddSqlServerDatastore(builder.Configuration);
 

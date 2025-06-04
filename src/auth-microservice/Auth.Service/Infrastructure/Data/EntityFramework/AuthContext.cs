@@ -29,6 +29,18 @@ public class AuthContext : IdentityDbContext<ApplicationUser>, IAuthStore
         return default;
     }
 
+    public async Task Update(ApplicationUser applicationUser)
+    {
+        var existUser = ApplicationUsers.FirstOrDefault(u => u.Email.ToLower().Equals(applicationUser.Email.ToLower()));
+
+        if(existUser is not null)
+        {
+            existUser.RefreshTokens = applicationUser.RefreshTokens;
+            ApplicationUsers.Update(existUser);
+            await SaveChangesAsync(acceptAllChangesOnSuccess: false);
+        }
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
    
