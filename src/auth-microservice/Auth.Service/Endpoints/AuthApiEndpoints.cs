@@ -1,5 +1,5 @@
-﻿
-using Auth.Service.ApiModels;
+﻿using Auth.Service.ApiModels.Requests;
+using Auth.Service.ApiModels.Responses;
 using Auth.Service.Infrastructure.Data;
 using Auth.Service.Services.IService;
 using System.Diagnostics;

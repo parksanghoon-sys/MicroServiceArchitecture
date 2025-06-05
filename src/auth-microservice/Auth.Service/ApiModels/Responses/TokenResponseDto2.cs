@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Auth.Service.ApiModels;
+namespace Auth.Service.ApiModels.Responses;
 
-public record TokenResponseDto
+public record TokenResponseDto2
 {
     public string Message { get; set; }
     public bool IsAuthenticated { get; set; }

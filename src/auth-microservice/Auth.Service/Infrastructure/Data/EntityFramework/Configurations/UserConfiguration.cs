@@ -14,6 +14,9 @@ namespace Auth.Service.Infrastructure.Data.EntityFramework.Configurations
 
             builder.Property(p => p.Email).IsRequired();
             builder.Property(p => p.UserId).IsRequired();
+            // IPv6 최대 길이
+            builder.Property(p => p.LastLoginIp).HasMaxLength(45);
+            builder.Property(p => p.RegistrationIp).HasMaxLength(45);
             //builder.Property(p => p.LastName).IsRequired();
 
             builder.HasData(

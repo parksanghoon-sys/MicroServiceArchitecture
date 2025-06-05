@@ -1,4 +1,4 @@
-﻿namespace Auth.Service.ApiModels;
+﻿namespace Auth.Service.ApiModels.Responses;
 
 public record ResponseDto (object? Result, bool IsSuccess, string Message);
 

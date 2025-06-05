@@ -1,8 +1,10 @@
 using Auth.Service.Endpoints;
 using Auth.Service.Infrastructure.Data.EntityFramework;
+using Auth.Service.Models;
 using Auth.Service.Services;
 using Auth.Service.Services.IService;
 using ECommerce.Shared.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 
@@ -32,6 +34,22 @@ builder.Services.AddOpenApi(options =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddJwtAuthentication(builder.Configuration);
+
+// Identity 설정
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 8;
+
+    // 계정 잠금 설정
+    options.Lockout.AllowedForNewUsers = true;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+});
+
 builder.Services.AddSqlServerDatastore(builder.Configuration);
 
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
