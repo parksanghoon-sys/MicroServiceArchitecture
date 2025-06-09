@@ -1,0 +1,111 @@
+version: '3.8'
+
+# 개발 환경용 Docker Compose 오버라이드 설정
+services:
+  auth-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build  # 개발용으로 build 스테이지까지만
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - JwtSettings__SecretKey=DevelopmentSecretKeyThatShouldBeAtLeast256BitsLongForHS256Algorithm!@#$$%^&*()
+      - JwtSettings__Issuer=AuthApiService-Dev
+      - JwtSettings__Audience=AuthApiServiceClients-Dev
+      - JwtSettings__AccessTokenExpirationMinutes=60
+      - JwtSettings__RefreshTokenExpirationDays=30
+      - LoggingSettings__MinimumLevel=Debug
+      - SecuritySettings__RequireHttps=false
+      - AppSettings__EnableSwagger=true
+      - AppSettings__EnableDeveloperExceptionPage=true
+    ports:
+      - "5000:8080"  # 개발 환경 포트
+      - "5001:8081"
+    volumes:
+      - .:/app/src:ro  # 소스 코드 볼륨 마운트 (읽기 전용)
+      - ./logs:/app/logs
+      - ./data:/app/data
+    command: dotnet watch run --project /app/src  # 핫 리로드 활성화
+    
+  # 개발 환경에서는 Redis 비밀번호 단순화
+  redis:
+    command: redis-server --appendonly yes --requirepass dev_password
+    ports:
+      - "6380:6379"  # 개발 환경 포트
+    
+  # 개발 환경에서는 Nginx 단순화
+  nginx:
+    ports:
+      - "8000:80"  # 개발 환경 포트
+    volumes:
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro  # 개발용 설정
+      - ./logs/nginx:/var/log/nginx
+
+  # 개발 환경용 추가 서비스들
+  
+  # 메일 서버 시뮬레이터 (개발/테스트용)
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: auth-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - auth-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  # 데이터베이스 관리 도구 (개발용)
+  adminer:
+    image: adminer:latest
+    container_name: auth-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=postgres
+    networks:
+      - auth-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+
+  # 개발용 PostgreSQL (선택적, 필요시 활성화)
+  postgres:
+    image: postgres:15-alpine
+    container_name: auth-postgres-dev
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=authapi_dev
+      - POSTGRES_USER=dev_user
+      - POSTGRES_PASSWORD=dev_password
+    volumes:
+      - postgres-dev-data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    networks:
+      - auth-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev_user -d authapi_dev"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+    profiles:
+      - database  # 프로파일로 선택적 실행
+
+volumes:
+  postgres-dev-data:
+    driver: local
