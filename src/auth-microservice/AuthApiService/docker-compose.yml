@@ -1,0 +1,174 @@
+version: '3.8'
+
+services:
+  # 인증 API 서비스
+  auth-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: auth-api-service
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - JwtSettings__SecretKey=${JWT_SECRET_KEY:-ProductionSecretKeyThatShouldBeAtLeast256BitsLongForHS256Algorithm!@#$$%^&*()}
+      - JwtSettings__Issuer=${JWT_ISSUER:-AuthApiService}
+      - JwtSettings__Audience=${JWT_AUDIENCE:-AuthApiServiceClients}
+    volumes:
+      - ./logs:/app/logs
+      - ./data:/app/data
+    networks:
+      - auth-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - redis
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis (캐싱 및 세션 관리용)
+  redis:
+    image: redis:7-alpine
+    container_name: auth-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-secure_redis_password}
+    volumes:
+      - redis-data:/data
+    networks:
+      - auth-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  # Nginx (리버스 프록시 및 로드 밸런서)
+  nginx:
+    image: nginx:alpine
+    container_name: auth-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      - auth-network
+    depends_on:
+      - auth-api
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Prometheus (모니터링)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: auth-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - auth-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+  # Grafana (대시보드)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: auth-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin123}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    networks:
+      - auth-network
+    depends_on:
+      - prometheus
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+
+networks:
+  auth-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  redis-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+# 개발 환경용 오버라이드
+---
+version: '3.8'
+
+# docker-compose.override.yml 내용 (개발 환경용)
+services:
+  auth-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - JwtSettings__AccessTokenExpirationMinutes=60
+      - JwtSettings__RefreshTokenExpirationDays=30
+      - LoggingSettings__MinimumLevel=Debug
+      - SecuritySettings__RequireHttps=false
+    ports:
+      - "5000:8080"
+    volumes:
+      - .:/app/src:ro
+      - ./logs:/app/logs
+    
+  nginx:
+    ports:
+      - "8000:80"
