@@ -169,7 +169,7 @@ public class AuthController : ControllerBase
             await _loggingService.LogInformationAsync(
                 $"회원가입 성공: {authResult.User!.Username}",
                 "API",
-                authResult.User.Id,
+                authResult.User.UserId,
                 new Dictionary<string, object>
                 {
                     ["Endpoint"] = "POST /api/auth/register",

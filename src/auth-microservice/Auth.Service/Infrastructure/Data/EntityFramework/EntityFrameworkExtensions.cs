@@ -23,11 +23,6 @@ namespace Auth.Service.Infrastructure.Data.EntityFramework
                           .ConfigureWarnings(w => w.Ignore(RelationalEventId.PendingModelChangesWarning))
                           .EnableDetailedErrors());
 
-
-
-            services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AuthContext>()
-                        .AddDefaultTokenProviders();
-
             services.AddScoped<IAuthStore, AuthContext>();
         }
     }

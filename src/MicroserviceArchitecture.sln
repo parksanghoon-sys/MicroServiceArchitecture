@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Service", "auth-micros
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application.Core", "shared-libs\Application.Core\Application.Core.csproj", "{EEBA019F-08A3-88CC-40FA-4FE202E70AF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JWTAuth.Service", "auth-microservice\JWTAuthService\JWTAuth.Service\JWTAuth.Service.csproj", "{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -135,6 +137,18 @@ Global
 		{EEBA019F-08A3-88CC-40FA-4FE202E70AF6}.Release|x64.Build.0 = Release|Any CPU
 		{EEBA019F-08A3-88CC-40FA-4FE202E70AF6}.Release|x86.ActiveCfg = Release|Any CPU
 		{EEBA019F-08A3-88CC-40FA-4FE202E70AF6}.Release|x86.Build.0 = Release|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Debug|x64.Build.0 = Debug|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Debug|x86.Build.0 = Debug|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Release|x64.ActiveCfg = Release|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Release|x64.Build.0 = Release|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Release|x86.ActiveCfg = Release|Any CPU
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,6 +162,7 @@ Global
 		{F48C1CA1-A4BC-4F26-9EAF-C256D1261E8A} = {0197667C-3A03-5830-C4DA-9DD475DA572F}
 		{08E2A906-E62A-421D-B493-EB4A879F7CE9} = {DB31F0D3-388F-E386-A298-1B7F111685FE}
 		{EEBA019F-08A3-88CC-40FA-4FE202E70AF6} = {3C2A4E42-05F2-AAB8-5640-BE8C77281074}
+		{B8B8FADE-E203-4C84-8DC9-47E339A1CA0A} = {DB31F0D3-388F-E386-A298-1B7F111685FE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {72536CFB-5C03-4CF4-B44C-F38E00119E0A}
